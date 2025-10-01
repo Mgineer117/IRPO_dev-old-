@@ -120,6 +120,12 @@ def get_args():
         help="IRPO: number of inner updates.",
     )
     parser.add_argument(
+        "--irm-method",
+        type=str,
+        default="linear",
+        help="IRPO: method for intrinsic reward modulation.",
+    )
+    parser.add_argument(
         "--weight-option",
         type=str,
         default="softmax",
@@ -191,7 +197,7 @@ def get_args():
         help="Generalized Advantage Estimation (GAE) factor.",
     )
     parser.add_argument(
-        "--entropy-scaler", type=float, default=1e-3, help="Base learning rate."
+        "--entropy-scaler", type=float, default=1e-2, help="Base learning rate."
     )
     parser.add_argument(
         "--intrinsic-reward-mode",

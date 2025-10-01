@@ -74,6 +74,8 @@ class IRPO_Algorithm(nn.Module):
             critic=critic,
             is_discrete=self.args.is_discrete,
             intrinsic_reward_fn=self.intrinsic_reward_fn,
+            irm_method=self.args.irm_method,
+            timesteps=self.args.timesteps,
             num_inner_updates=self.args.num_inner_updates,
             outer_level_update_mode=self.args.outer_level_update_mode,
             outer_actor_lr=self.args.outer_actor_lr,

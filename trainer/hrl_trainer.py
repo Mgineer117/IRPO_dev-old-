@@ -15,23 +15,13 @@ from tqdm import tqdm
 from log.wandb_logger import WandbLogger
 from policy.layers.base import Base
 from policy.uniform_random import UniformRandom
+from trainer.base_trainer import BaseTrainer
 from utils.rl import estimate_advantages
 from utils.sampler import OnlineSampler
 
 
-def compare_weights(policy1, policy2):
-    diffs = {}
-    for (name1, param1), (name2, param2) in zip(
-        policy1.named_parameters(), policy2.named_parameters()
-    ):
-        assert name1 == name2, "Parameter names do not match"
-        diff = torch.norm(param1.data - param2.data).item()
-        diffs[name1] = diff
-    return diffs
-
-
 # model-free policy trainer
-class HRLTrainer:
+class HRLTrainer(BaseTrainer):
     def __init__(
         self,
         env: gym.Env,
@@ -349,30 +339,6 @@ class HRLTrainer:
 
         return eval_dict, image_array
 
-    def discounted_return(self, rewards, gamma):
-        G = 0
-        for r in reversed(rewards):
-            G = r + gamma * G
-        return G
-
-    def write_log(self, logging_dict: dict, step: int, eval_log: bool = False):
-        # Logging to WandB and Tensorboard
-        self.logger.store(**logging_dict)
-        self.logger.write(step, eval_log=eval_log, display=False)
-        for key, value in logging_dict.items():
-            self.writer.add_scalar(key, value, step)
-
-    def write_image(self, image: np.ndarray, step: int, logdir: str, name: str):
-        image_list = image if isinstance(image, list) else [image]
-        image_path = os.path.join(logdir, name)
-        self.logger.write_images(step=step, images=image_list, logdir=image_path)
-
-    def write_video(self, image: list, step: int, logdir: str, name: str):
-        if len(image) > 0:
-            tensor = np.stack(image, axis=0)
-            video_path = os.path.join(logdir, name)
-            self.logger.write_videos(step=step, images=tensor, logdir=video_path)
-
     def save_model(self, e: int, model: nn.Module, name: str):
         ### save checkpoint
         name = f"{name}_{e}.pth"
@@ -395,28 +361,3 @@ class HRLTrainer:
                 self.last_min_return_std = np.mean(self.last_return_std)
         else:
             raise ValueError("Error: Model is not identifiable!!!")
-
-    def visitation_to_rgb(self, visitation_map: np.ndarray) -> np.ndarray:
-        visitation_map = np.squeeze(visitation_map)  # Make sure it's 2D
-        H, W = visitation_map.shape
-
-        rgb_map = np.ones((H, W, 3), dtype=np.float32)  # Start with white
-
-        # Zero visitation → gray
-        zero_mask = visitation_map == 0
-        rgb_map[zero_mask] = [0.5, 0.5, 0.5]
-
-        # Nonzero visitation → white → blue gradient
-        nonzero_mask = visitation_map > 0
-        blue_intensity = visitation_map[nonzero_mask]
-
-        rgb_map[nonzero_mask] = np.stack(
-            [
-                1.0 - blue_intensity,  # Red
-                1.0 - blue_intensity,  # Green
-                np.ones_like(blue_intensity),  # Blue
-            ],
-            axis=-1,
-        )
-
-        return rgb_map
