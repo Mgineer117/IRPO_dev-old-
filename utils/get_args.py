@@ -102,6 +102,12 @@ def get_args():
 
     # === IRPO PARAMETERS === #
     parser.add_argument(
+        "--irpo-type",
+        type=str,
+        default="irpo",
+        help="{'irpo', 'irpo_lr', 'irpo_pick', 'irpo_blend', 'irpo_is'}.",
+    )
+    parser.add_argument(
         "--outer-level-update-mode",
         type=str,
         default="trpo",
