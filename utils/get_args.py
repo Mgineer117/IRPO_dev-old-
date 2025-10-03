@@ -88,8 +88,9 @@ def get_args():
     )
     parser.add_argument(
         "--actor-fc-dim",
-        type=list,
+        type=int,
         default=[256, 256],
+        nargs="+",
         help="actor fc layer dimensions.",
     )
     parser.add_argument(
@@ -98,6 +99,8 @@ def get_args():
         default=[256, 256],
         help="critic fc layer dimensions.",
     )
+
+    # === IRPO PARAMETERS === #
     parser.add_argument(
         "--outer-level-update-mode",
         type=str,
@@ -131,6 +134,8 @@ def get_args():
         default="softmax",
         help="Weighting method for gradient aggregation: softmax vs argmax.",
     )
+    # =========================== #
+
     parser.add_argument(
         "--extractor-epochs",
         type=int,
@@ -197,7 +202,7 @@ def get_args():
         help="Generalized Advantage Estimation (GAE) factor.",
     )
     parser.add_argument(
-        "--entropy-scaler", type=float, default=1e-2, help="Base learning rate."
+        "--entropy-scaler", type=float, default=1e-3, help="Base learning rate."
     )
     parser.add_argument(
         "--intrinsic-reward-mode",

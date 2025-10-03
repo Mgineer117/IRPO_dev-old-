@@ -1,0 +1,6 @@
+nohup python3 main.py --env-name pointmaze-v1 --project irpo_optimality --algo-name irpo --gpu-idx 0 --irm-method linear --rendering --actor-fc-dim 16 16 &
+nohup python3 main.py --env-name pointmaze-v1 --project irpo_optimality --algo-name irpo --gpu-idx 0 --irm-method linear --rendering --actor-fc-dim 64 64 &
+nohup python3 main.py --env-name pointmaze-v1 --project irpo_optimality --algo-name irpo --gpu-idx 0 --irm-method linear --rendering --actor-fc-dim 1024 1024 &
+
+
+
