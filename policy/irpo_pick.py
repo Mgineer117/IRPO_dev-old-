@@ -123,7 +123,6 @@ class IRPO_Pick_Learner(Base):
     def forward(self, state: np.ndarray, deterministic: bool = False):
         state = self.preprocess_state(state)
         if deterministic:
-            print("[WARNING] Deterministic mode is on.")
             # when eval mode is on, use the most probable exploratory policy
             actor = self.Nth_exploratory_policies[
                 str(np.argmax(self.probability_history))
@@ -254,20 +253,6 @@ class IRPO_Pick_Learner(Base):
             for grads_per_param in outer_gradients_transposed
         )
 
-        # === convex combination of IRPO gradient with true gradient === #
-        target = 10000000
-        ratio = target / self.timesteps
-        if self.irm_method == "zero":
-            irm_weight = 0.0
-        elif self.irm_method == "linear":
-            irm_weight = max(0, min((1 / ratio) * learning_progress, 1))
-        elif self.irm_method == "exponential":
-            irm_weight = max(
-                0, min((np.exp(learning_progress / ratio) - 1) / (np.exp(1.0) - 1), 1)
-            )
-        elif self.irm_method == "drift":
-            irm_weight = 1.0 if learning_progress >= ratio else 0.0
-
         # === Perform outer-level update === #
         backtrack_iter, backtrack_success = self.learn_outer_level_policy(
             states=init_batch["states"],
@@ -304,7 +289,7 @@ class IRPO_Pick_Learner(Base):
         loss_dict[f"{self.name}/analytics/Backtrack_success"] = backtrack_success
         loss_dict[f"{self.name}/analytics/target_kl"] = self.target_kl
         loss_dict[f"{self.name}/analytics/inner_actor_lr"] = self.inner_actor_lr
-        loss_dict[f"{self.name}/analytics/irm_weight"] = irm_weight
+        loss_dict[f"{self.name}/analytics/irm_weight"] = 0.0
 
         loss_dict.update(self.intrinsic_reward_fn.loss_dict)
 
