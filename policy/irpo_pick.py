@@ -123,6 +123,7 @@ class IRPO_Pick_Learner(Base):
     def forward(self, state: np.ndarray, deterministic: bool = False):
         state = self.preprocess_state(state)
         if deterministic:
+            print("[WARNING] Deterministic mode is on.")
             # when eval mode is on, use the most probable exploratory policy
             actor = self.Nth_exploratory_policies[
                 str(np.argmax(self.probability_history))
