@@ -176,6 +176,7 @@ class IRPOTrainer(BaseTrainer):
 
             for t in range(self.env.max_steps):
                 with torch.no_grad():
+                    print("Evaluating...")
                     a, _ = self.policy(state, deterministic=True)
                     a = a.cpu().numpy().squeeze(0) if a.shape[-1] > 1 else [a.item()]
 
