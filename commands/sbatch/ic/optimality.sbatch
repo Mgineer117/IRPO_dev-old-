@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=igtpo-ablation
+#SBATCH --job-name=IRPO
 #SBATCH --account=huytran1-ic
 #SBATCH --partition=IllinoisComputes-GPU
 #SBATCH --nodes=1
@@ -7,7 +7,7 @@
 #SBATCH --cpus-per-task=6
 #SBATCH --gres=gpu:1
 #SBATCH --time=3-00:00:00
-#SBATCH --output=igtpo-ablation.o%j
+#SBATCH --output=IRPO.o%j
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=minjae5@illinois.edu
 
