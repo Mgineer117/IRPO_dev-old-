@@ -471,7 +471,7 @@ class IRPO_IS_Learner(Base):
         if prefix == "inner":
             ratios = logprobs
         else:
-            _, base_infos = self.actor(states, deterministic=True)
+            _, base_infos = self.actor(states)
             old_logprobs = base_infos["logprobs"]
             ratios = torch.exp(logprobs - old_logprobs)
         actor_loss = -(ratios * advantages).mean()
