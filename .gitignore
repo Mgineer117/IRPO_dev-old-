@@ -8,6 +8,7 @@ __pycache__/
 *.so
 *.p
 *.svg
+lbc.py
 
 # Distribution / packaging
 .Python

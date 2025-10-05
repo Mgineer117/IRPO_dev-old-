@@ -23,6 +23,7 @@ EPI_LENGTH = {
     "pointmazedense-v0": 500,
     "pointmazedense-v1": 500,
     "fetchreach-v0": 50,
+    "fetchpush-v0": 50,
 }
 
 
@@ -68,6 +69,27 @@ def call_env(args, random_spawn: bool = False):
         env = FetchWrapper(env, max_steps, args.seed)
 
         args.positional_indices = [-6, -5, -4]
+        args.state_dim = (
+            env.observation_space["observation"].shape[0]
+            + env.observation_space["achieved_goal"].shape[0]
+            + env.observation_space["desired_goal"].shape[0],
+        )
+        args.action_dim = env.action_space.shape[0]
+        args.is_discrete = env.action_space.__class__.__name__ == "Discrete"
+
+    elif env_name == "fetchpush":
+
+        gym.register_envs(gymnasium_robotics)
+
+        env = gym.make(
+            "FetchPush-v4",
+            max_episode_steps=max_steps,
+            render_mode="rgb_array",
+        )
+
+        env = FetchWrapper(env, max_steps, args.seed)
+
+        args.positional_indices = [6, 7, 8]
         args.state_dim = (
             env.observation_space["observation"].shape[0]
             + env.observation_space["achieved_goal"].shape[0]

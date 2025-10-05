@@ -149,10 +149,10 @@ class IRPO_IS_Learner(Base):
         # === UPDATE VIA GRADIENT CHAIN === #
         loss_dict_list, outer_gradients = [], []
         for i in range(self.intrinsic_reward_fn.num_rewards):
-            for j in range(self.num_inner_updates):
-                # === Select the actor === #
-                actor = self.actor_list[i]
+            # === Select the actor === #
+            actor = self.actor_list[i]
 
+            for j in range(self.num_inner_updates):
                 # === Identify this is inner or outer-level update === #
                 prefix = "outer" if j == self.num_inner_updates - 1 else "inner"
 
@@ -346,21 +346,9 @@ class IRPO_IS_Learner(Base):
             advantages.std() + 1e-8
         )
 
-        actor_loss, entropy_loss = self.actor_loss(
+        gradients = self.actor_loss(
             actor, states, actions, normalized_advantages, prefix
         )
-
-        if prefix == "outer":
-            # include the entropy loss in the outer-level policy update
-            loss = actor_loss - entropy_loss
-        else:
-            # do not include the entropy loss in the inner-level policy update
-            # this is because intrinsic reward is already abundant
-            loss = actor_loss
-
-        # === Update actor === #
-        gradients = torch.autograd.grad(loss, actor.parameters())
-        gradients = self.clip_grad_norm(gradients, max_norm=0.5)
 
         # Manual SGD update (structured, not flat)
         with torch.no_grad():
@@ -372,7 +360,6 @@ class IRPO_IS_Learner(Base):
         )
 
         loss_dict = {
-            f"{self.name}/loss/actor_loss": actor_loss.item(),
             f"{self.name}/loss/extrinsic_critic_loss": extrinsic_critic_loss,
             f"{self.name}/loss/intrinsic_critic_loss": intrinsic_critic_loss,
             f"{self.name}/grad/actor": actor_grad_norm.item(),
@@ -465,19 +452,37 @@ class IRPO_IS_Learner(Base):
         advantages: torch.Tensor,
         prefix: str,
     ):
-        _, metaData = actor(states)
-        logprobs = actor.log_prob(metaData["dist"], actions)
-        entropy = actor.entropy(metaData["dist"])
+        _, infos = actor(states)
+        _, base_infos = self.actor(states)
+
+        logprobs = actor.log_prob(infos["dist"], actions)
+        entropy = actor.entropy(infos["dist"])
+
+        base_logprobs = self.actor.log_prob(base_infos["dist"], actions)
+        base_entropy = self.actor.entropy(base_infos["dist"])
+
         if prefix == "inner":
             ratios = logprobs
         else:
-            _, base_infos = self.actor(states)
-            old_logprobs = base_infos["logprobs"]
-            ratios = torch.exp(logprobs - old_logprobs)
-        actor_loss = -(ratios * advantages).mean()
-        entropy_loss = self.entropy_scaler * entropy.mean()
+            # NOTE: this is backward of the usual ratio since we use the exploratory samples
+            kl_div = base_logprobs - logprobs  # forward kl as usual
+            ratios = torch.exp(kl_div)
 
-        return actor_loss, entropy_loss
+        # print(kl_div.mean().item())
+
+        actor_loss = -(ratios * advantages).mean()
+
+        if prefix == "outer":
+            entropy_loss = self.entropy_scaler * base_entropy.mean()
+            loss = actor_loss - entropy_loss
+            gradients = torch.autograd.grad(loss, self.actor.parameters())
+        else:
+            loss = actor_loss
+            gradients = torch.autograd.grad(loss, actor.parameters())
+
+        gradients = self.clip_grad_norm(gradients, max_norm=0.5)
+
+        return gradients
 
     def critic_loss(
         self, critic: nn.Module, states: torch.Tensor, returns: torch.Tensor

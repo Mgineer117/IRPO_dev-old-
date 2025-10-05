@@ -187,7 +187,7 @@ class ALLO(Base):
         # Optimize
         self.optimizer.zero_grad()
         loss.backward()
-        # torch.nn.utils.clip_grad_norm_(self.network.parameters(), max_norm=10.0)
+        torch.nn.utils.clip_grad_norm_(self.network.parameters(), max_norm=10.0)
         grad_dict, norm_dict = self.get_grad_weight_norm()
         self.optimizer.step()
 
