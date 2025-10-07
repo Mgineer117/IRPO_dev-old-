@@ -240,30 +240,16 @@ class IntrinsicRewardFunctions(nn.Module):
         ]
 
         heatmaps = self.extractor_env.get_rewards_heatmap(self.extractor, eigenvectors)
-        # Make sure the directory exists
-        os.makedirs("heatmap_svgs", exist_ok=True)
-        os.makedirs(f"heatmap_svgs/{self.args.env_name}", exist_ok=True)
+        log_dir = f"{self.logger.log_dir}/intrinsic_rewards"
 
-        # for i, fig in enumerate(heatmaps):
-        #     fig.savefig(
-        #         f"heatmap_svgs/{self.args.env_name}/heatmap_{i}.svg",
-        #         format="svg",
-        #         bbox_inches="tight",
-        #         pad_inches=0,
-        #     )
-        # plt.close(fig)  # Close the specific figure to free memory
-        for i, img in enumerate(heatmaps):
-            plt.imshow(
-                img, cmap="hot", interpolation="nearest"
-            )  # or any other colormap you prefer
-            plt.axis("off")  # optional: hide axes
-            plt.savefig(
-                f"heatmap_svgs/{self.args.env_name}/heatmap_{i}.svg",
-                format="svg",
-                bbox_inches="tight",
-                pad_inches=0,
-            )
-            plt.close()
+        os.mkdir(f"{log_dir}")
+        for i, fig in enumerate(heatmaps):
+            if isinstance(fig, np.ndarray):
+                plt.imsave(f"{log_dir}/figure_{i}.pdf", fig, cmap="viridis")
+                plt.imsave(f"{log_dir}/figure_{i}.svg", fig, cmap="viridis")
+            elif isinstance(fig, plt.Figure):
+                fig.savefig(f"{log_dir}/figure_{i}.pdf", format="pdf")
+                fig.savefig(f"{log_dir}/figure_{i}.svg", format="svg")
 
         self.eigenvectors = eigenvectors
         self.logger.write_images(

@@ -23,7 +23,7 @@ EPI_LENGTH = {
     "pointmazedense-v0": 500,
     "pointmazedense-v1": 500,
     "fetchreach-v0": 50,
-    "fetchpush-v0": 50,
+    "fetchpush-v0": 200,
 }
 
 

@@ -177,7 +177,7 @@ class OnlineSampler(Base):
         random_init_pos: bool = False,
     ):
         # assign per-worker seed
-        worker_seed = seed + pid
+        worker_seed = random.randint(0, 10000) + seed + pid
         np.random.seed(worker_seed)
         random.seed(worker_seed)
         torch.manual_seed(worker_seed)

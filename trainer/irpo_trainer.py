@@ -1,4 +1,5 @@
 import os
+import random
 import time
 from collections import deque
 from copy import deepcopy
@@ -172,7 +173,8 @@ class IRPOTrainer(BaseTrainer):
             ep_reward = []
 
             # Env initialization
-            state, infos = self.env.reset(seed=self.seed)
+            eval_seed = random.randint(0, 10000) + self.seed + num_episodes
+            state, infos = self.env.reset(seed=eval_seed)
 
             for t in range(self.env.max_steps):
                 with torch.no_grad():
