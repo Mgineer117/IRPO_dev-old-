@@ -91,14 +91,7 @@ class WandbLogger(BaseLogger):
 
         image_list = []
         for img in images:
-            # img can be a path to an image file or a numpy array representing an image.
-            # You can also use wandb.Image to wrap the image data in case it's an array.
-            if isinstance(img, str):
-                # If the img is a file path, log it directly
-                image_list.append(wandb.Image(img))
-            else:
-                # If the img is an array (e.g., numpy array), log it as a wandb image
-                image_list.append(wandb.Image(img))
+            image_list.append(wandb.Image(img))
 
         # Log the list of images
         wandb.log({f"{logdir}": image_list}, step=int(step))

@@ -2,6 +2,7 @@ import os
 from abc import abstractmethod
 
 import gymnasium as gym
+import matplotlib.pyplot as plt
 import numpy as np
 import torch
 import torch.nn as nn
@@ -103,7 +104,9 @@ class BaseTrainer:
         for key, value in logging_dict.items():
             self.writer.add_scalar(key, value, step)
 
-    def write_image(self, image: np.ndarray, step: int, logdir: str, name: str):
+    def write_image(
+        self, image: np.ndarray | plt.Figure, step: int, logdir: str, name: str
+    ):
         image_list = [image]
         image_path = os.path.join(logdir, name)
         self.logger.write_images(step=step, images=image_list, logdir=image_path)

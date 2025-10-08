@@ -98,7 +98,7 @@ class OnPolicyTrainer(BaseTrainer):
                     self.policy.eval()
                     eval_idx += 1
 
-                    eval_dict, running_video = self.evaluate()
+                    eval_dict, supp_dict = self.evaluate()
 
                     # Manual logging
                     if self.policy.state_visitation is not None:
@@ -114,10 +114,16 @@ class OnPolicyTrainer(BaseTrainer):
                         )
 
                     self.write_log(eval_dict, step=step, eval_log=True)
-                    self.write_video(
-                        running_video,
+                    self.write_image(
+                        supp_dict["eval/trajectory_plot"],
                         step=step,
-                        logdir=f"videos",
+                        logdir="Image",
+                        name="trajectory",
+                    )
+                    self.write_video(
+                        supp_dict["eval/rendering"],
+                        step=step,
+                        logdir=f"Video",
                         name="running_video",
                     )
 
@@ -133,8 +139,7 @@ class OnPolicyTrainer(BaseTrainer):
         )
 
     def evaluate(self):
-        ep_buffer = []
-        image_array = []
+        ep_buffer, image_array, trajectories, desired_goals = [], [], [], []
         for num_episodes in range(self.eval_num):
             ep_reward = []
 
@@ -166,6 +171,9 @@ class OnPolicyTrainer(BaseTrainer):
                         }
                     )
 
+                    traj, desired_goal = self.env.get_trajectory_info()
+                    trajectories.append(traj)
+                    desired_goals.append(desired_goal)
                     break
 
         return_list = [ep_info["return"] for ep_info in ep_buffer]
@@ -173,13 +181,19 @@ class OnPolicyTrainer(BaseTrainer):
 
         spectral_loss = self.spectral_loss(self.policy.actor)
 
+        trajectory_plot = self.env.get_trajectory_plot(trajectories, desired_goals)
+
         eval_dict = {
             f"eval/return_mean": return_mean,
             f"eval/return_std": return_std,
             f"eval/spectral_loss": spectral_loss,
         }
+        supp_dict = {
+            "eval/trajectory_plot": trajectory_plot,
+            "eval/rendering": image_array,
+        }
 
-        return eval_dict, image_array
+        return eval_dict, supp_dict
 
     def save_model(self, e):
         ### save checkpoint

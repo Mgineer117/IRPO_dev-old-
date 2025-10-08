@@ -9,7 +9,7 @@ from torch.utils.tensorboard import SummaryWriter
 
 import gymnasium_robotics
 from log.wandb_logger import WandbLogger
-from utils.wrapper import FetchWrapper, GridWrapper, PointMazeWrapper
+from utils.wrapper import FetchWrapper, GridWrapper, MazeWrapper
 
 EPI_LENGTH = {
     "fourrooms-v0": 100,
@@ -149,7 +149,7 @@ def call_env(args, random_spawn: bool = False):
             render_mode="rgb_array",
         )
 
-        env = PointMazeWrapper(env, example_map, max_steps, args.seed)
+        env = MazeWrapper(env, example_map, max_steps, args.seed, cell_size=1.0)
 
         args.positional_indices = [-4, -3]
         args.state_dim = (
@@ -209,7 +209,7 @@ def call_env(args, random_spawn: bool = False):
             render_mode="rgb_array",
         )
 
-        env = PointMazeWrapper(env, example_map, max_steps, args.seed)
+        env = MazeWrapper(env, example_map, max_steps, args.seed, cell_size=1.0)
 
         args.positional_indices = [-4, -3]
         args.state_dim = (
@@ -282,7 +282,7 @@ def call_env(args, random_spawn: bool = False):
             render_mode="rgb_array",
         )
 
-        env = PointMazeWrapper(env, example_map, max_steps, args.seed)
+        env = MazeWrapper(env, example_map, max_steps, args.seed, cell_size=4.0)
 
         args.positional_indices = [-4, -3]
         args.state_dim = (

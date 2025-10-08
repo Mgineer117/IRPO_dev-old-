@@ -64,6 +64,12 @@ class GridWrapper(gym.Wrapper):
         )
         return observation, reward, termination, truncation, info
 
+    def get_trajectory_info(self):
+        return None, None
+
+    def get_trajectory_plot(self, trajectories: list):
+        return None
+
     def __getattr__(self, name):
         # Forward any unknown attribute to the inner environment
         return getattr(self.env, name)
@@ -75,6 +81,10 @@ class FetchWrapper(gym.Wrapper):
 
         self.max_steps = episode_len
         self.seed = seed
+
+    def __getattr__(self, name):
+        # Forward any unknown attribute to the inner environment
+        return getattr(self.env, name)
 
     def reset(self, **kwargs):
         observation_dict, info = self.env.reset(**kwargs)
@@ -105,6 +115,12 @@ class FetchWrapper(gym.Wrapper):
             termination = True  # terminate if goal is achieved
 
         return observation, reward, termination, truncation, info
+
+    def get_trajectory_info(self):
+        return None, None
+
+    def get_trajectory_plot(self, trajectories: list):
+        return None
 
     def get_rewards_heatmap(self, extractor: torch.nn.Module, eigenvectors: np.ndarray):
 
@@ -213,13 +229,29 @@ class FetchWrapper(gym.Wrapper):
         return images
 
 
-class PointMazeWrapper(gym.Wrapper):
-    def __init__(self, env: gym.Env, maze_map: list, episode_len: int, seed: int):
-        super(PointMazeWrapper, self).__init__(env)
+class MazeWrapper(gym.Wrapper):
+    def __init__(
+        self,
+        env: gym.Env,
+        maze_map: list,
+        episode_len: int,
+        seed: int,
+        cell_size: int = 1.0,
+    ):
+        super(MazeWrapper, self).__init__(env)
 
         self.maze_map = maze_map
         self.max_steps = episode_len
         self.seed = seed
+
+        self.trajectory = []
+        self.desired_goal = None
+
+        self.cell_size = cell_size
+
+    def __getattr__(self, name):
+        # Forward any unknown attribute to the inner environment
+        return getattr(self.env, name)
 
     def reset(self, **kwargs):
         observation_dict, info = self.env.reset(**kwargs)
@@ -230,6 +262,9 @@ class PointMazeWrapper(gym.Wrapper):
                 observation_dict["desired_goal"],
             )
         )
+
+        self.desired_goal = observation_dict["desired_goal"].copy()
+        self.trajectory = [observation_dict["achieved_goal"].copy()]
 
         return observation, info
 
@@ -243,7 +278,87 @@ class PointMazeWrapper(gym.Wrapper):
                 observation_dict["desired_goal"],
             )
         )
+
+        self.trajectory.append(observation_dict["achieved_goal"].copy())
         return observation, reward, termination, truncation, info
+
+    def get_trajectory_info(self):
+        trajectory = self.trajectory
+        self.trajectory = None
+        return trajectory, self.desired_goal
+
+    def get_trajectory_plot(self, trajectories: list, desired_goals: list):
+        fig = plt.figure(figsize=(8, 6))
+
+        # Maze info
+        maze_height = len(self.maze_map)
+        maze_width = len(self.maze_map[0])
+        cell_size = self.cell_size
+
+        # Draw walls
+        for i in range(maze_height):
+            for j in range(maze_width):
+                val = self.maze_map[i][j]
+                if val == 1:
+                    # Compute cell center
+                    x_center = (j + 0.5) * cell_size - (maze_width * cell_size / 2)
+                    y_center = (maze_height * cell_size / 2) - (i + 0.5) * cell_size
+                    # Draw rectangle
+                    rect = plt.Rectangle(
+                        (x_center - cell_size / 2, y_center - cell_size / 2),
+                        cell_size,
+                        cell_size,
+                        color="black",
+                    )
+                    plt.gca().add_patch(rect)
+
+        # Plot trajectory
+        for i, traj in enumerate(trajectories):
+            traj = np.array(traj)
+            # mark start and end points
+            plt.scatter(
+                traj[0, 0],
+                traj[0, 1],
+                color="green",
+                label="Start" if i == 0 else None,
+                s=50,
+            )
+            plt.scatter(
+                traj[-1, 0],
+                traj[-1, 1],
+                color="red",
+                label="End" if i == 0 else None,
+                s=50,
+            )
+            plt.plot(
+                traj[:, 0],
+                traj[:, 1],
+                color=plt.cm.viridis(i / len(trajectories)),
+                label=f"Trajectory" if i == 0 else None,
+                lw=2,
+            )
+
+            # Plot desired goal with star marker with boundary black
+            plt.scatter(
+                desired_goals[i][0],
+                desired_goals[i][1],
+                color=plt.cm.viridis(i / len(trajectories)),
+                label="Goal" if i == 0 else None,
+                s=300,
+                marker="*",
+                edgecolor="black",
+            )
+
+        plt.xlabel("X")
+        plt.ylabel("Y")
+        plt.title("Agent Trajectory in Maze")
+        plt.legend(fontsize=14)
+        plt.axis("equal")
+        plt.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.7)
+        plt.tight_layout()
+        plt.close()
+
+        return fig
 
     def get_rewards_heatmap(self, extractor: torch.nn.Module, eigenvectors: np.ndarray):
         # Get desired goal (2D)
