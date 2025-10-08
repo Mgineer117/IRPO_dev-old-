@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=igtpo-ablation
+#SBATCH --job-name=IRPO
 #SBATCH --account=huytran1-ic
 #SBATCH --partition=csl
 #SBATCH --nodes=1
