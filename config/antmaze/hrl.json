@@ -4,10 +4,10 @@
     "eps_clip": 0.2,
     "K_epochs": 5,
     "target_kl": 0.01,
-    "gamma": 0.999,
+    "gamma": 0.9995,
     "num_options": 6,
     "num_minibatch": 4,
     "minibatch_size": 4096,
     "intrinsic_reward_mode": "allo",
-    "discount_sampling_factor": 0.99
+    "discount_sampling_factor": 0.995
 }

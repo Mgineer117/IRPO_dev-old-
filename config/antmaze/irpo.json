@@ -6,11 +6,11 @@
     "inner_actor_lr": 1e-1,
     "num_inner_updates": 5,
     "target_kl": 0.001,
-    "gamma": 0.999,
+    "gamma": 0.9995,
     "num_options": 4,
     "num_minibatch": 4,
     "minibatch_size": 4096,
     "batch_size": 16384,
     "intrinsic_reward_mode": "allo",
-    "discount_sampling_factor": 0.99
+    "discount_sampling_factor": 0.995
 }
