@@ -1,4 +1,5 @@
-nohup python3 main.py --env-name pointmaze-v1 --project irpo_optimality --algo-name irpo --gpu-idx 1 --irm-method zero --rendering &
-nohup python3 main.py --env-name pointmaze-v1 --project irpo_optimality --algo-name irpo --gpu-idx 0 --irm-method linear --rendering &
-nohup python3 main.py --env-name pointmaze-v1 --project irpo_optimality --algo-name irpo --gpu-idx 0 --irm-method exponential --rendering &
-nohup python3 main.py --env-name pointmaze-v1 --project irpo_optimality --algo-name irpo --gpu-idx 0 --irm-method drift --rendering &
+nohup python3 main.py --algo-name irpo --env-name antmaze-v1 --rendering --inner-actor-lr 1.0 --irpo-type irpo_pick &
+sleep 60
+nohup python3 main.py --algo-name irpo --env-name antmaze-v1 --rendering --num-inner-updates 10 --irpo-type irpo_pick &
+sleep 60
+nohup python3 main.py --algo-name irpo --env-name antmaze-v1 --rendering --inner-actor-lr 1.0 --num-inner-updates 10 --irpo-type irpo_pick &
