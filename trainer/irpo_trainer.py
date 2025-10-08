@@ -94,7 +94,7 @@ class IRPOTrainer(BaseTrainer):
                     self.policy.eval()
                     eval_idx += 1
 
-                    eval_dict, running_video = self.evaluate()
+                    eval_dict, supp_dict = self.evaluate()
 
                     # Manual logging
                     weights = self.policy.probability_history
@@ -140,18 +140,17 @@ class IRPOTrainer(BaseTrainer):
 
                     self.write_log(eval_dict, step=current_step, eval_log=True)
                     self.write_image(
-                        image=img,
+                        supp_dict["eval/trajectory_plot"],
                         step=current_step,
-                        logdir=f"Image",
-                        name="value estimate",
+                        logdir="Image",
+                        name="trajectory",
                     )
                     self.write_video(
-                        running_video,
+                        supp_dict["eval/rendering"],
                         step=current_step,
-                        logdir=f"videos",
+                        logdir=f"Video",
                         name="running_video",
                     )
-
                     self.last_return_mean.append(eval_dict[f"eval/return_mean"])
                     self.last_return_std.append(eval_dict[f"eval/return_std"])
 
@@ -167,8 +166,7 @@ class IRPOTrainer(BaseTrainer):
         return current_step
 
     def evaluate(self):
-        ep_buffer = []
-        image_array = []
+        ep_buffer, image_array, trajectories, desired_goals = [], [], [], []
         for num_episodes in range(self.eval_num):
             ep_reward = []
 
@@ -201,20 +199,28 @@ class IRPOTrainer(BaseTrainer):
                         }
                     )
 
+                    traj, desired_goal = self.env.get_trajectory_info()
+                    trajectories.append(traj)
+                    desired_goals.append(desired_goal)
                     break
 
         return_list = [ep_info["return"] for ep_info in ep_buffer]
         return_mean, return_std = np.mean(return_list), np.std(return_list)
 
         spectral_loss = self.spectral_loss(self.policy.actor)
+        trajectory_plot = self.env.get_trajectory_plot(trajectories, desired_goals)
 
         eval_dict = {
             f"eval/return_mean": return_mean,
             f"eval/return_std": return_std,
             f"eval/spectral_loss": spectral_loss,
         }
+        supp_dict = {
+            "eval/trajectory_plot": trajectory_plot,
+            "eval/rendering": image_array,
+        }
 
-        return eval_dict, image_array
+        return eval_dict, supp_dict
 
     def save_model(self, e):
         ### save checkpoint

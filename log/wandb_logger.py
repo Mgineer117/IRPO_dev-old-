@@ -82,8 +82,6 @@ class WandbLogger(BaseLogger):
 
     def write_images(self, step: int, images: list | None, logdir: str) -> None:
         """Logs images to wandb."""
-        if images is None:
-            return
         if isinstance(images, torch.Tensor):
             images = images.detach().cpu().numpy()
         if isinstance(images, np.ndarray):
@@ -91,6 +89,8 @@ class WandbLogger(BaseLogger):
 
         image_list = []
         for img in images:
+            if img is None:
+                continue
             image_list.append(wandb.Image(img))
 
         # Log the list of images

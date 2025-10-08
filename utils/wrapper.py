@@ -67,7 +67,7 @@ class GridWrapper(gym.Wrapper):
     def get_trajectory_info(self):
         return None, None
 
-    def get_trajectory_plot(self, trajectories: list):
+    def get_trajectory_plot(self, trajectories: list, desired_goals: list):
         return None
 
     def __getattr__(self, name):
@@ -119,7 +119,7 @@ class FetchWrapper(gym.Wrapper):
     def get_trajectory_info(self):
         return None, None
 
-    def get_trajectory_plot(self, trajectories: list):
+    def get_trajectory_plot(self, trajectories: list, desired_goals: list):
         return None
 
     def get_rewards_heatmap(self, extractor: torch.nn.Module, eigenvectors: np.ndarray):

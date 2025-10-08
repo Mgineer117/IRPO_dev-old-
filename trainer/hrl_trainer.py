@@ -189,7 +189,7 @@ class HRLTrainer(BaseTrainer):
                     self.hl_policy.eval()
                     eval_idx += 1
 
-                    eval_dict, running_video = self.hl_evaluate()
+                    eval_dict, supp_dict = self.hl_evaluate()
 
                     # Manual logging
                     if self.hl_policy.state_visitation is not None:
@@ -205,10 +205,16 @@ class HRLTrainer(BaseTrainer):
                         )
 
                     self.write_log(eval_dict, step=current_step, eval_log=True)
-                    self.write_video(
-                        running_video,
+                    self.write_image(
+                        supp_dict["eval/trajectory_plot"],
                         step=current_step,
-                        logdir=f"videos",
+                        logdir="Image",
+                        name="trajectory",
+                    )
+                    self.write_video(
+                        supp_dict["eval/rendering"],
+                        step=current_step,
+                        logdir=f"Video",
                         name="running_video",
                     )
 
@@ -226,53 +232,8 @@ class HRLTrainer(BaseTrainer):
 
         return current_step
 
-    def evaluate(self, policy: nn.Module):
-        ep_buffer = []
-        image_array = []
-        for num_episodes in range(self.eval_num):
-            ep_reward = []
-
-            # Env initialization
-            eval_seed = random.randint(0, 10000) + self.seed + num_episodes
-            state, infos = self.env.reset(seed=eval_seed)
-
-            for t in range(self.env.max_steps):
-                with torch.no_grad():
-                    a, _ = policy(state, deterministic=True)
-                    a = a.cpu().numpy().squeeze(0) if a.shape[-1] > 1 else [a.item()]
-
-                if num_episodes == 0 and self.rendering:
-                    image = self.env.render()
-                    image_array.append(image)
-
-                next_state, rew, term, trunc, infos = self.env.step(a)
-                done = term or trunc
-
-                state = next_state
-                ep_reward.append(rew)
-
-                if done:
-                    ep_buffer.append(
-                        {
-                            "return": self.discounted_return(ep_reward, policy.gamma),
-                        }
-                    )
-
-                    break
-
-        return_list = [ep_info["return"] for ep_info in ep_buffer]
-        return_mean, return_std = np.mean(return_list), np.std(return_list)
-
-        eval_dict = {
-            f"eval/return_mean": return_mean,
-            f"eval/return_std": return_std,
-        }
-
-        return eval_dict, image_array
-
     def hl_evaluate(self):
-        ep_buffer = []
-        image_array = []
+        ep_buffer, image_array, trajectories, desired_goals = [], [], [], []
         for num_episodes in range(self.eval_num):
             ep_reward = []
 
@@ -328,18 +289,28 @@ class HRLTrainer(BaseTrainer):
                             ),
                         }
                     )
-
+                    traj, desired_goal = self.env.get_trajectory_info()
+                    trajectories.append(traj)
+                    desired_goals.append(desired_goal)
                     break
 
         return_list = [ep_info["return"] for ep_info in ep_buffer]
         return_mean, return_std = np.mean(return_list), np.std(return_list)
 
+        spectral_loss = self.spectral_loss(self.hl_policy.actor)
+        trajectory_plot = self.env.get_trajectory_plot(trajectories, desired_goals)
+
         eval_dict = {
             f"eval/return_mean": return_mean,
             f"eval/return_std": return_std,
+            f"eval/spectral_loss": spectral_loss,
+        }
+        supp_dict = {
+            "eval/trajectory_plot": trajectory_plot,
+            "eval/rendering": image_array,
         }
 
-        return eval_dict, image_array
+        return eval_dict, supp_dict
 
     def save_model(self, e: int, model: nn.Module, name: str):
         ### save checkpoint

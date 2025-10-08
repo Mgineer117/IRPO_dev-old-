@@ -180,7 +180,6 @@ class OnPolicyTrainer(BaseTrainer):
         return_mean, return_std = np.mean(return_list), np.std(return_list)
 
         spectral_loss = self.spectral_loss(self.policy.actor)
-
         trajectory_plot = self.env.get_trajectory_plot(trajectories, desired_goals)
 
         eval_dict = {
