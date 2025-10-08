@@ -467,8 +467,7 @@ class IRPO_IS_Learner(Base):
             # NOTE: this is backward of the usual ratio since we use the exploratory samples
             kl_div = base_logprobs - logprobs  # forward kl as usual
             ratios = torch.exp(kl_div)
-
-        # print(kl_div.mean().item())
+            print(kl_div.max().item())
 
         actor_loss = -(ratios * advantages).mean()
 
