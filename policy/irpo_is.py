@@ -473,7 +473,7 @@ class IRPO_IS_Learner(Base):
         actor_loss = -(ratios * advantages).mean()
 
         if prefix == "outer":
-            entropy_loss = self.entropy_scaler * base_entropy.mean()
+            entropy_loss = self.entropy_scaler * entropy.mean()
             loss = actor_loss - entropy_loss
             gradients = torch.autograd.grad(loss, self.actor.parameters())
         else:

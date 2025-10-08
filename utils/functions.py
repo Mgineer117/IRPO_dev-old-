@@ -22,8 +22,10 @@ EPI_LENGTH = {
     "pointmaze-v1": 500,
     "pointmazedense-v0": 500,
     "pointmazedense-v1": 500,
+    "antmaze-v0": 500,
+    "antmaze-v1": 500,
     "fetchreach-v0": 50,
-    "fetchpush-v0": 200,
+    "fetchpush-v0": 50,
 }
 
 
@@ -37,7 +39,7 @@ def call_env(args, random_spawn: bool = False):
 
     env_name, version = args.env_name.split("-")
     version = int(version[-1]) if version[-1].isdigit() else version[-1]
-    if env_name in ("fourrooms", "ninerooms", "maze"):
+    if env_name in ["fourrooms", "ninerooms", "maze"]:
         # For grid environment, we do not use an observation normalization
         # since the most of the state is static (walls) that leads to 0 std.
         if env_name == "fourrooms":
@@ -201,6 +203,62 @@ def call_env(args, random_spawn: bool = False):
 
         env = gym.make(
             "PointMaze_UMazeDense-v3",
+            maze_map=example_map,
+            max_episode_steps=max_steps,
+            continuing_task=continuing_task,
+            render_mode="rgb_array",
+        )
+
+        env = PointMazeWrapper(env, example_map, max_steps, args.seed)
+
+        args.positional_indices = [-4, -3]
+        args.state_dim = (
+            env.observation_space["observation"].shape[0]
+            + env.observation_space["achieved_goal"].shape[0]
+            + env.observation_space["desired_goal"].shape[0],
+        )
+        args.action_dim = env.action_space.shape[0]
+        args.is_discrete = env.action_space.__class__.__name__ == "Discrete"
+
+    elif env_name == "antmaze":
+        gym.register_envs(gymnasium_robotics)
+        if version == 0:
+            if random_spawn:
+                example_map = [
+                    [1, 1, 1, 1, 1],
+                    [1, "c", "c", 1, 1],
+                    [1, 1, "c", "c", 1],
+                    [1, 1, 1, 1, 1],
+                ]
+                continuing_task = True
+            else:
+                example_map = [
+                    [1, 1, 1, 1, 1],
+                    [1, "r", 0, 1, 1],
+                    [1, 1, 0, "g", 1],
+                    [1, 1, 1, 1, 1],
+                ]
+                continuing_task = False
+        elif version == 1:
+            if random_spawn:
+                example_map = [
+                    [1, 1, 1, 1, 1],
+                    [1, "c", 1, "c", 1],
+                    [1, "c", "c", "c", 1],
+                    [1, 1, 1, 1, 1],
+                ]
+                continuing_task = True
+            else:
+                example_map = [
+                    [1, 1, 1, 1, 1],
+                    [1, "r", 1, "g", 1],
+                    [1, 0, 0, 0, 1],
+                    [1, 1, 1, 1, 1],
+                ]
+                continuing_task = False
+
+        env = gym.make(
+            "AntMaze_UMaze-v5",
             maze_map=example_map,
             max_episode_steps=max_steps,
             continuing_task=continuing_task,
