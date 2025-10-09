@@ -21,9 +21,9 @@ source ~/.bashrc
 conda activate irpo
 
 # === Run Experiments in Parallel ===
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --project Exp --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 1.0 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --project Exp --algo-name irpo --irpo-type irpo_pick --num-inner-updates 10 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --project Exp --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 1.0 --num-inner-updates 10 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --project Exp --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 1.0 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --project Exp --algo-name irpo --irpo-type irpo_pick --num-inner-updates 10 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --project Exp --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 1.0 --num-inner-updates 10 &
 
 
 
