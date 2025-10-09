@@ -3,7 +3,7 @@
 #SBATCH --account=huytran1-ic
 #SBATCH --partition=IllinoisComputes-GPU
 #SBATCH --nodes=1
-#SBATCH --ntasks=4
+#SBATCH --ntasks=5
 #SBATCH --cpus-per-task=4
 #SBATCH --gres=gpu:1
 #SBATCH --time=3-00:00:00
@@ -25,6 +25,7 @@ CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --project Ant --alg
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --project Ant --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 0.05 --num-inner-updates 20 --target-kl 0.0005 &
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --project Ant --algo-name irpo --irpo-type irpo_pick --num-inner-updates 20 --target-kl 0.0005 &
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --project Ant --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 1.0 --num-inner-updates 20 --target-kl 0.0005 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --project Ant --algo-name ppo &
 
 
 
