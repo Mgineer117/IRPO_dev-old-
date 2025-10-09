@@ -22,8 +22,8 @@ EPI_LENGTH = {
     "pointmaze-v1": 500,
     "pointmazedense-v0": 500,
     "pointmazedense-v1": 500,
-    "antmaze-v0": 1000,
-    "antmaze-v1": 1000,
+    "antmaze-v0": 500,
+    "antmaze-v1": 500,
     "fetchreach-v0": 50,
     "fetchpush-v0": 50,
 }
@@ -225,25 +225,24 @@ def call_env(args, random_spawn: bool = False):
         if version == 0:
             if random_spawn:
                 example_map = [
-                    [1, 1, 1, 1, 1],
-                    [1, "c", "c", 1, 1],
-                    [1, 1, "c", "c", 1],
-                    [1, 1, 1, 1, 1],
+                    [1, 1, 1, 1],
+                    [1, "c", 1, 1],
+                    [1, "c", "c", 1],
+                    [1, 1, 1, 1],
                 ]
                 continuing_task = True
             else:
                 example_map = [
-                    [1, 1, 1, 1, 1],
-                    [1, "r", 0, 1, 1],
-                    [1, 1, 0, "g", 1],
-                    [1, 1, 1, 1, 1],
+                    [1, 1, 1, 1],
+                    [1, "r", 1, 1],
+                    [1, 0, "g", 1],
+                    [1, 1, 1, 1],
                 ]
                 continuing_task = False
         elif version == 1:
             if random_spawn:
                 example_map = [
                     [1, 1, 1, 1, 1],
-                    [1, "c", 1, 1, 1],
                     [1, "c", "c", "c", 1],
                     [1, 1, 1, 1, 1],
                 ]
@@ -251,25 +250,7 @@ def call_env(args, random_spawn: bool = False):
             else:
                 example_map = [
                     [1, 1, 1, 1, 1],
-                    [1, "r", 1, 1, 1],
-                    [1, 0, 0, "g", 1],
-                    [1, 1, 1, 1, 1],
-                ]
-                continuing_task = False
-        elif version == 2:
-            if random_spawn:
-                example_map = [
-                    [1, 1, 1, 1, 1],
-                    [1, "c", 1, "c", 1],
-                    [1, "c", "c", "c", 1],
-                    [1, 1, 1, 1, 1],
-                ]
-                continuing_task = True
-            else:
-                example_map = [
-                    [1, 1, 1, 1, 1],
-                    [1, "r", 1, "g", 1],
-                    [1, 0, 0, 0, 1],
+                    [1, "r", 0, "g", 1],
                     [1, 1, 1, 1, 1],
                 ]
                 continuing_task = False

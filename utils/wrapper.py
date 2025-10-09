@@ -336,6 +336,7 @@ class MazeWrapper(gym.Wrapper):
                 color=plt.cm.viridis(i / len(trajectories)),
                 label=f"Trajectory" if i == 0 else None,
                 lw=2,
+                alpha=0.8,
             )
 
             # Plot desired goal with star marker with boundary black
