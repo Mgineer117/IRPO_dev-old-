@@ -3,7 +3,7 @@
 #SBATCH --account=huytran1-ic
 #SBATCH --partition=IllinoisComputes-GPU
 #SBATCH --nodes=1
-#SBATCH --ntasks=5
+#SBATCH --ntasks=4
 #SBATCH --cpus-per-task=4
 #SBATCH --gres=gpu:1
 #SBATCH --time=3-00:00:00
@@ -21,11 +21,10 @@ source ~/.bashrc
 conda activate irpo
 
 # === Run Experiments in Parallel ===
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --project Ant --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 10.0 --num-inner-updates 5 --target-kl 0.0003 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --project Ant --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 5.0 --num-inner-updates 5 --target-kl 0.0003 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --project Ant --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 5.0 --num-inner-updates 10 --target-kl 0.0003 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --project Ant --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 5.0 --num-inner-updates 20 --target-kl 0.0003 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --project Ant --algo-name ppo &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --project Ant --algo-name irpo --irpo-type irpo_is --inner-actor-lr 1.0 --num-inner-updates 10 --target-kl 0.001 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --project Ant --algo-name irpo --irpo-type irpo --inner-actor-lr 1.0 --num-inner-updates 10 --target-kl 0.001 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --project Ant --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 1.0 --num-inner-updates 15 --target-kl 0.001 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --project Ant --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 1.0 --num-inner-updates 30 --target-kl 0.001 &
 
 
 
