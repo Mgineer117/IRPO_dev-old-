@@ -21,10 +21,10 @@ source ~/.bashrc
 conda activate irpo
 
 # === Run Experiments in Parallel ===
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --project Ant --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 10.0 --num-inner-updates 5 --target-kl 0.001 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --project Ant --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 5.0 --num-inner-updates 5 --target-kl 0.001 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --project Ant --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 5.0 --num-inner-updates 10 --target-kl 0.001 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --project Ant --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 5.0 --num-inner-updates 20 --target-kl 0.001 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --project Ant --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 10.0 --num-inner-updates 5 --target-kl 0.0003 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --project Ant --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 5.0 --num-inner-updates 5 --target-kl 0.0003 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --project Ant --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 5.0 --num-inner-updates 10 --target-kl 0.0003 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --project Ant --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 5.0 --num-inner-updates 20 --target-kl 0.0003 &
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --project Ant --algo-name ppo &
 
 
