@@ -403,7 +403,7 @@ class IRPO_Pick_Learner(Base):
 
         # Compute gradients
         gradients = torch.autograd.grad(loss, actor.parameters(), create_graph=True)
-        # gradients = self.clip_grad_norm(gradients, max_norm=0.5)
+        gradients = self.clip_grad_norm(gradients, max_norm=0.5)
 
         # Manual SGD update (structured, not flat)
         with torch.no_grad():
