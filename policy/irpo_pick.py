@@ -337,8 +337,8 @@ class IRPO_Pick_Learner(Base):
                 intrinsic_rewards,
                 terminals,
                 intrinsic_values,
-                # gamma=1.0,  # it is easy to optimize with gamma = 1.0 since reward is dense and almost monotonic
-                gamma=self.gamma,
+                gamma=1.0,  # it is easy to optimize with gamma = 1.0 since reward is dense and almost monotonic
+                # gamma=self.gamma,
                 gae=self.gae,
             )
 
@@ -403,7 +403,7 @@ class IRPO_Pick_Learner(Base):
 
         # Compute gradients
         gradients = torch.autograd.grad(loss, actor.parameters(), create_graph=True)
-        gradients = self.clip_grad_norm(gradients, max_norm=0.5)
+        # gradients = self.clip_grad_norm(gradients, max_norm=0.5)
 
         # Manual SGD update (structured, not flat)
         with torch.no_grad():
