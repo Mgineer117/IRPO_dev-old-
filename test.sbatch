@@ -6,7 +6,7 @@
 #SBATCH --ntasks=6
 #SBATCH --cpus-per-task=6
 #SBATCH --gres=gpu:2
-#SBATCH --time=3-00:00:00
+#SBATCH --time=2-00:00:00
 #SBATCH --output=IRPO.o%j
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=minjae5@illinois.edu
