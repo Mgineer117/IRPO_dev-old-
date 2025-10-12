@@ -25,9 +25,9 @@ CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --project Ant --a
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --project Ant --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 0.01 &
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --project Ant --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 0.1 &
 
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v0 --project Ant --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 0.01 --num-inner-updates 5 &
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v0 --project Ant --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 0.1 --num-inner-updates 5 &
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v0 --project Ant --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 1.0 --num-inner-updates 5 &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v0 --project Ant --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 0.1 &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v0 --project Ant --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 1.0 &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v0 --project Ant --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 10.0 &
 
 
 
