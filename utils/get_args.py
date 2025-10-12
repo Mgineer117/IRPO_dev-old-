@@ -80,7 +80,7 @@ def get_args():
     parser.add_argument(
         "--critic-lr",
         type=float,
-        default=3e-4,
+        default=1e-4,
         help="Base learning rate for the critic for all algorithms.",
     )
     parser.add_argument(
