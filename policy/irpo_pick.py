@@ -390,14 +390,15 @@ class IRPO_Pick_Learner(Base):
         advantages = (advantages - advantages.mean()) / (advantages.std() + 1e-8)
 
         actor_loss, entropy_loss = self.actor_loss(actor, states, actions, advantages)
+        loss = actor_loss - entropy_loss
 
-        if prefix == "outer":
-            # include the entropy loss in the outer-level policy update
-            loss = actor_loss - entropy_loss
-        else:
-            # do not include the entropy loss in the inner-level policy update
-            # this is because intrinsic reward is already abundant
-            loss = actor_loss
+        # if prefix == "outer":
+        #     # include the entropy loss in the outer-level policy update
+        #     loss = actor_loss - entropy_loss
+        # else:
+        #     # do not include the entropy loss in the inner-level policy update
+        #     # this is because intrinsic reward is already abundant
+        #     loss = actor_loss
 
         # Compute gradients
         gradients = torch.autograd.grad(loss, actor.parameters(), create_graph=True)
