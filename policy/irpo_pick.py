@@ -337,7 +337,8 @@ class IRPO_Pick_Learner(Base):
                 intrinsic_rewards,
                 terminals,
                 intrinsic_values,
-                gamma=1.0,  # it is easy to optimize with gamma = 1.0 since reward is dense and almost monotonic
+                # gamma=1.0,  # it is easy to optimize with gamma = 1.0 since reward is dense and almost monotonic
+                gamma=self.gamma,
                 gae=self.gae,
             )
 
