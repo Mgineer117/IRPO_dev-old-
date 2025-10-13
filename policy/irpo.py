@@ -5,6 +5,7 @@ import gymnasium as gym
 import numpy as np
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 from torch.autograd import grad
 
 from policy.layers.base import Base
@@ -53,9 +54,9 @@ class IRPO_Learner(Base):
         self.state_dim = actor.state_dim
         self.action_dim = actor.action_dim
 
-        self.timesteps = timesteps
         self.irm_target = irm_target
         self.irm_method = irm_method
+        self.timesteps = timesteps
 
         # IRPO parameters
         self.outer_level_update_mode = outer_level_update_mode  # "trpo" or "sgd"
@@ -112,6 +113,9 @@ class IRPO_Learner(Base):
         self.probability_history = np.array(
             [0.0 for _ in range(self.intrinsic_reward_fn.num_rewards)]
         )
+        self.Nth_exploratory_policies = {
+            f"{i}": deepcopy(actor) for i in range(self.intrinsic_reward_fn.num_rewards)
+        }
 
         # ensure the actor is in desireable dtype and device
         self.wall_clock_time = 0
@@ -119,7 +123,14 @@ class IRPO_Learner(Base):
 
     def forward(self, state: np.ndarray, deterministic: bool = False):
         state = self.preprocess_state(state)
-        a, metaData = self.actor(state, deterministic=deterministic)
+        if deterministic:
+            # when eval mode is on, use the most probable exploratory policy
+            actor = self.Nth_exploratory_policies[
+                str(np.argmax(self.probability_history))
+            ]
+            a, metaData = actor(state, deterministic=deterministic)
+        else:
+            a, metaData = self.actor(state, deterministic=deterministic)
 
         return a, {
             "probs": metaData["probs"],
@@ -127,6 +138,30 @@ class IRPO_Learner(Base):
             "entropy": metaData["entropy"],
             "dist": metaData["dist"],
         }
+
+    def compute_weights(self, learning_progress, epsilon=1e-6):
+        """
+        probability_history: torch.Tensor, shape [num_actions]
+        learning_progress: float in [0, 1]
+        """
+        target = 0.25
+        learning_progress = learning_progress / target + epsilon
+        probability_history = torch.tensor(self.probability_history).to(self.device)
+
+        # interpolate between softmax and argmax
+        if learning_progress >= 1.0:
+            # use hard argmax
+            weights = torch.zeros_like(probability_history)
+            weights[torch.argmax(probability_history)] = 1.0
+        else:
+            # temperature decreases with learning_progress
+            # self.temperature = 1.0 - learning_progress + epsilon
+            self.temperature = max(
+                0, min((np.exp(learning_progress) - 1) / (np.exp(1.0) - 1), 1)
+            )
+            weights = F.softmax(probability_history / self.temperature, dim=0)
+
+        return weights
 
     def learn(
         self, env: gym.Env, sampler: OnlineSampler, seed: int, learning_progress: float
@@ -175,7 +210,7 @@ class IRPO_Learner(Base):
                     timesteps = batch["states"].shape[0]
 
                 # === Update probability history using exponential moving average === #
-                beta = 0.95
+                beta = 0.995
                 self.probability_history[i] = (
                     beta * self.probability_history[i]
                     + (1 - beta) * batch["rewards"].mean()
@@ -229,12 +264,17 @@ class IRPO_Learner(Base):
         most_contributing_index = np.argmax(self.probability_history)
 
         # === Gradient aggregation === #
-        if self.weight_option == "argmax":
-            weights = np.zeros_like(self.probability_history)
-            weights[np.argmax(self.probability_history)] = 1.0
-        elif self.weight_option == "softmax":
-            weights = self.probability_history
-            weights = weights / (weights.sum() + 1e-8)
+        # given learning progress, compute weights based on self.probability_history
+        # but initially softmax to argmax. Specifically, when learning_progress = 0,
+        # use softmax, when learning_progress = 1, use argmax.
+        weights = self.compute_weights(learning_progress).cpu().numpy()
+
+        # if self.weight_option == "argmax":
+        #     weights = np.zeros_like(self.probability_history)
+        #     weights[np.argmax(self.probability_history)] = 1.0
+        # elif self.weight_option == "softmax":
+        #     weights = self.probability_history
+        #     weights = weights / (weights.sum() + 1e-8)
 
         # === Group by parameter=== #
         outer_gradients_transposed = list(zip(*outer_gradients))
@@ -280,6 +320,7 @@ class IRPO_Learner(Base):
         loss_dict[f"{self.name}/analytics/target_kl"] = self.target_kl
         loss_dict[f"{self.name}/analytics/inner_actor_lr"] = self.inner_actor_lr
         loss_dict[f"{self.name}/analytics/irm_weight"] = 0.0
+        loss_dict[f"{self.name}/analytics/temperature"] = self.temperature
 
         loss_dict.update(self.intrinsic_reward_fn.loss_dict)
 
@@ -328,6 +369,7 @@ class IRPO_Learner(Base):
                 terminals,
                 intrinsic_values,
                 gamma=1.0,  # it is easy to optimize with gamma = 1.0 since reward is dense and almost monotonic
+                # gamma=self.gamma,
                 gae=self.gae,
             )
 
@@ -380,6 +422,7 @@ class IRPO_Learner(Base):
         advantages = (advantages - advantages.mean()) / (advantages.std() + 1e-8)
 
         actor_loss, entropy_loss = self.actor_loss(actor, states, actions, advantages)
+        # loss = actor_loss - entropy_loss
 
         if prefix == "outer":
             # include the entropy loss in the outer-level policy update
@@ -397,6 +440,9 @@ class IRPO_Learner(Base):
         with torch.no_grad():
             for p, g in zip(actor_clone.parameters(), gradients):
                 p -= self.inner_actor_lr * g
+
+        if prefix == "outer":
+            self.Nth_exploratory_policies[str(i)] = actor_clone
 
         # Logging
         actor_grad_norm = torch.sqrt(
