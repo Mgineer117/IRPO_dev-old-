@@ -1,8 +1,0 @@
-nohup python3 main.py --env-name pointmaze-v0 --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 0.001 --num-inner-updates 5 --target-kl 0.0001 &
-nohup python3 main.py --env-name pointmaze-v0 --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 0.01 --num-inner-updates 5 --target-kl 0.0001 &
-nohup python3 main.py --env-name pointmaze-v0 --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 0.1 --num-inner-updates 5 --target-kl 0.0001 &
-nohup python3 main.py --env-name pointmaze-v0 --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 0.01 --num-inner-updates 5 --target-kl 0.0001 &
-
-# nohup python3 main.py --env-name pointmaze-v1 --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 0.01 --num-inner-updates 5 --target-kl 0.0001 &
-# nohup python3 main.py --env-name pointmaze-v1 --algo-name irpo --irpo-type irpo --inner-actor-lr 0.01 --num-inner-updates 5 --target-kl 0.0001 &
-# nohup python3 main.py --env-name fetchreach-v0 --algo-name irpo --irpo-type irpo_pick --inner-actor-lr 0.01 --num-inner-updates 5 --target-kl 0.0001 &
