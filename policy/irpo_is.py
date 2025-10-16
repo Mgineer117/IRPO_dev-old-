@@ -300,7 +300,7 @@ class IRPO_IS_Learner(Base):
 
         # === Prepare for critic learning === #
         batch_size = states.shape[0]
-        critic_iteration = 5
+        critic_iteration = 4
         mb_size = batch_size // critic_iteration
         perm = torch.randperm(batch_size)
 
