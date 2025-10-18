@@ -1,0 +1,10 @@
+nohup python3 main.py --algo-name ppo --env-name antmaze-v0 --project Ant &
+nohup python3 main.py --algo-name drndppo --env-name antmaze-v0 --project Ant &
+nohup python3 main.py --algo-name psne --env-name antmaze-v0 --project Ant &
+nohup python3 main.py --algo-name trpo --env-name antmaze-v0 --project Ant &
+
+nohup python3 main.py --algo-name ppo --env-name antmaze-v1 --project Ant &
+nohup python3 main.py --algo-name drndppo --env-name antmaze-v1 --project Ant &
+nohup python3 main.py --algo-name psne --env-name antmaze-v1 --project Ant &
+nohup python3 main.py --algo-name trpo --env-name antmaze-v1 --project Ant &
+
