@@ -1,5 +1,5 @@
 {
-    "timesteps": 3e8,
+    "timesteps": 5e8,
     "eps_clip": 0.2,
     "K_epochs": 5,
     "outer_actor_lr": 1e-3,

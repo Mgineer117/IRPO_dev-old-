@@ -1,6 +1,6 @@
 {
-    "hl_timesteps": 6e7,
-    "timesteps": 4e7,
+    "hl_timesteps": 2e8,
+    "timesteps": 5e7,
     "eps_clip": 0.2,
     "K_epochs": 5,
     "target_kl": 0.01,
