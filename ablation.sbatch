@@ -23,14 +23,14 @@ conda activate irpo
 # === Run Experiments in Parallel ===
 
 # trust-region
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --project irpo_ablation --algo-name irpo --irpo-type irpo_pick --outer-level-update-mode sgd --outer-actor-lr 0.0001 & 
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --project irpo_ablation --algo-name irpo --irpo-type irpo_pick --outer-level-update-mode sgd --outer-actor-lr 0.001 & 
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --project irpo_ablation --algo-name irpo --irpo-type irpo_pick --outer-level-update-mode sgd --outer-actor-lr 0.01 & 
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --project irpo_ablation --algo-name irpo --irpo-type irpo_pick --outer-level-update-mode sgd --outer-actor-lr 0.1 & 
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --project irpo_ablation --algo-name irpo --irpo-type irpo --outer-level-update-mode sgd --outer-actor-lr 0.0001 & 
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --project irpo_ablation --algo-name irpo --irpo-type irpo --outer-level-update-mode sgd --outer-actor-lr 0.001 & 
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --project irpo_ablation --algo-name irpo --irpo-type irpo --outer-level-update-mode sgd --outer-actor-lr 0.01 & 
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --project irpo_ablation --algo-name irpo --irpo-type irpo --outer-level-update-mode sgd --outer-actor-lr 0.1 & 
 
 # number of exploratory policy updates
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --project irpo_ablation --algo-name irpo --irpo-type irpo_pick --num-inner-updates 2 & 
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name pointmaze-v0 --project irpo_ablation --algo-name irpo --irpo-type irpo_pick --num-inner-updates 10 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --project irpo_ablation --algo-name irpo --irpo-type irpo --num-inner-updates 2 & 
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name pointmaze-v0 --project irpo_ablation --algo-name irpo --irpo-type irpo --num-inner-updates 10 &
 
 # blending gradient
 CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name pointmaze-v0 --project irpo_ablation --algo-name irpo --irpo-type irpo_blend --irm-method linear &
