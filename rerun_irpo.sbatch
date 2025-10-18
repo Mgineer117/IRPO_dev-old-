@@ -5,7 +5,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=6
 #SBATCH --cpus-per-task=6
-#SBATCH --gres=gpu:2
+#SBATCH --gres=gpu:1
 #SBATCH --time=3-00:00:00
 #SBATCH --output=IRPO.o%j
 #SBATCH --mail-type=FAIL
@@ -21,13 +21,13 @@ source ~/.bashrc
 conda activate irpo
 
 # === Run Experiments in Parallel ===
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name fourrooms-v0 --project IRPO --algo-name irpo --irpo-type irpo_pick &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name maze-v0 --project IRPO --algo-name irpo --irpo-type irpo_pick &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name maze-v1 --project IRPO --algo-name irpo --irpo-type irpo_pick &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name fourrooms-v0 --project IRPO --algo-name irpo --irpo-type irpo &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name maze-v0 --project IRPO --algo-name irpo --irpo-type irpo &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name maze-v1 --project IRPO --algo-name irpo --irpo-type irpo &
 
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name pointmaze-v0 --project IRPO --algo-name irpo --irpo-type irpo_pick &
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name pointmaze-v1 --project IRPO --algo-name irpo --irpo-type irpo_pick &
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name fetchreach-v0 --project IRPO --algo-name irpo --irpo-type irpo_pick &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --project IRPO --algo-name irpo --irpo-type irpo &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v1 --project IRPO --algo-name irpo --irpo-type irpo &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name fetchreach-v0 --project IRPO --algo-name irpo --irpo-type irpo &
 
 # === Wait for all background jobs to finish ===
 wait
