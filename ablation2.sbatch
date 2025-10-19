@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH --job-name=IRPO
+#SBATCH --job-name=IRPO-random
 #SBATCH --account=huytran1-ic
-#SBATCH --partition=IllinoisComputes-GPU
+#SBATCH --partition=eng-research-gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=10
 #SBATCH --cpus-per-task=6
@@ -27,9 +27,9 @@ CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name fetchreach-v0 --algo-name irpo
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --algo-name irpo --intrinsic-reward-mode random --project IRPO_random &
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v1 --algo-name irpo --intrinsic-reward-mode random --project IRPO_random &
 
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name fetchreach-v0 --algo-name hrl --intrinsic-reward-mode random --project IRPO_random &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --algo-name hrl --intrinsic-reward-mode random --project IRPO_random &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v1 --algo-name hrl --intrinsic-reward-mode random --project IRPO_random &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name fetchreach-v0 --algo-name hrl --intrinsic-reward-mode random --project IRPO_random &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name pointmaze-v0 --algo-name hrl --intrinsic-reward-mode random --project IRPO_random &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name pointmaze-v1 --algo-name hrl --intrinsic-reward-mode random --project IRPO_random &
 
 
 # whether soft + arg helps
