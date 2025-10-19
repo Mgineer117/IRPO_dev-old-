@@ -1,0 +1,12 @@
+nohup python3 main.py --algo-name ppo --env-name antmaze-v2 --project Ant --rendering --gpu-idx 0 &
+nohup python3 main.py --algo-name drndppo --env-name antmaze-v2 --project Ant --gpu-idx 0 &
+nohup python3 main.py --algo-name psne --env-name antmaze-v2 --project Ant --gpu-idx 0 &
+nohup python3 main.py --algo-name trpo --env-name antmaze-v2 --project Ant --gpu-idx 0 &
+nohup python3 main.py --algo-name irpo --env-name antmaze-v2 --project Ant --gpu-idx 0 &
+
+nohup python3 main.py --algo-name ppo --env-name antmaze-v3 --project Ant --rendering --gpu-idx 1 &
+nohup python3 main.py --algo-name drndppo --env-name antmaze-v3 --project Ant --gpu-idx 1 &
+nohup python3 main.py --algo-name psne --env-name antmaze-v3 --project Ant --gpu-idx 1 &
+nohup python3 main.py --algo-name trpo --env-name antmaze-v3 --project Ant --gpu-idx 1 &
+nohup python3 main.py --algo-name irpo --env-name antmaze-v3 --project Ant --gpu-idx 1 &
+
