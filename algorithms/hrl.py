@@ -23,7 +23,7 @@ class HRL(nn.Module):
         self.writer = writer
         self.args = args
 
-        if self.args.intrinsic_reward_mode in ("eigenpurpose", "allo"):
+        if self.args.intrinsic_reward_mode in ("eigenpurpose", "allo", "random"):
             self.intrinsic_reward_fn = IntrinsicRewardFunctions(
                 logger=logger,
                 writer=writer,

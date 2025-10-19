@@ -1,5 +1,6 @@
 import glob
 import os
+import random
 from copy import deepcopy
 
 import matplotlib.pyplot as plt
@@ -51,6 +52,14 @@ class IntrinsicRewardFunctions(nn.Module):
 
             self.sources = ["allo" for _ in range(self.args.num_options)]
             self.sources.append("drnd")
+        elif self.args.intrinsic_reward_mode == "random":
+            self.num_rewards = self.args.num_options
+            self.extractor_mode = "random"
+
+            self.define_random_model()
+            self.define_eigenvectors()
+
+            self.sources = ["random" for _ in range(self.args.num_options)]
         else:
             raise NotImplementedError(
                 f"The intrinsic reward mode {self.args.intrinsic_reward_mode} not implemented or unknown."
@@ -73,6 +82,19 @@ class IntrinsicRewardFunctions(nn.Module):
         elif self.sources[i] == "drnd":
             with torch.no_grad():
                 intrinsic_rewards = self.drnd_policy.intrinsic_reward(next_states)
+        elif self.sources[i] == "random":
+            states = states[:, self.args.positional_indices]
+            next_states = next_states[:, self.args.positional_indices]
+
+            with torch.no_grad():
+                feature, _ = self.extractor(states)
+                next_feature, _ = self.extractor(next_states)
+                difference = next_feature - feature
+
+                eigenvector_idx, eigenvector_sign = self.eigenvectors[i]
+                intrinsic_rewards = eigenvector_sign * difference[
+                    :, eigenvector_idx
+                ].unsqueeze(-1)
 
         return intrinsic_rewards, self.sources[i]
 
@@ -298,5 +320,31 @@ class IntrinsicRewardFunctions(nn.Module):
             gamma=self.args.gamma,
             gae=self.args.gae,
             K=self.args.K_epochs,
+            device=self.args.device,
+        )
+
+    def define_random_model(self):
+        # random arbitrary neural networks size of (32, 32)
+        # but with different nonlinearities and initializations
+        from extractor.base.mlp import NeuralNet
+        from extractor.extractor import ALLO
+
+        # === CREATE FEATURE EXTRACTOR === #
+        feature_network = NeuralNet(
+            state_dim=len(self.args.positional_indices),
+            feature_dim=self.args.feature_dim,
+            encoder_fc_dim=[512, 512, 512, 512],
+            activation=nn.Tanh(),
+        )
+
+        # === DEFINE LEARNING METHOD FOR EXTRACTOR === #
+        self.extractor = ALLO(
+            network=feature_network,
+            positional_indices=self.args.positional_indices,
+            extractor_lr=self.args.extractor_lr,
+            epochs=self.args.extractor_epochs,
+            batch_size=1024,
+            lr_barrier_coeff=self.args.lr_barrier_coeff,  # ALLO uses 0.01 lr_barrier_coeff
+            discount=self.args.discount_sampling_factor,  # ALLO uses 0.99 discount
             device=self.args.device,
         )

@@ -140,6 +140,12 @@ def get_args():
         default="softmax",
         help="Weighting method for gradient aggregation: softmax vs argmax.",
     )
+    parser.add_argument(
+        "--intrinsic-reward-mode",
+        type=str,
+        default=None,
+        help="Mode for intrinsic rewards (e.g., 'allo', 'drnd', 'allo-drnd').",
+    )
     # =========================== #
 
     parser.add_argument(
@@ -209,12 +215,6 @@ def get_args():
     )
     parser.add_argument(
         "--entropy-scaler", type=float, default=1e-3, help="Base learning rate."
-    )
-    parser.add_argument(
-        "--intrinsic-reward-mode",
-        type=str,
-        default=None,
-        help="Mode for intrinsic rewards (e.g., 'allo', 'drnd', 'allo-drnd').",
     )
     parser.add_argument("--gamma", type=float, default=None, help="Discount factor.")
     parser.add_argument(

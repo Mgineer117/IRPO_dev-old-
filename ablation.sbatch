@@ -41,6 +41,11 @@ CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name pointmaze-v0 --project irpo_ab
 CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name pointmaze-v0 --project irpo_ablation --algo-name irpo --irpo-type irpo_is --target-kl 0.01 & 
 
 
+# whether soft + arg helps
+# CUDA_VISIBLE_DEVICES=0 nohup python3 main.py --env-name pointmaze-v0 --project irpo_ablation --algo-name irpo --irpo-type irpo_pick & 
+# CUDA_VISIBLE_DEVICES=1 nohup python3 main.py --env-name pointmaze-v1 --project irpo_ablation --algo-name irpo --irpo-type irpo_pick &
+
+
 
 # === Wait for all background jobs to finish ===
 wait

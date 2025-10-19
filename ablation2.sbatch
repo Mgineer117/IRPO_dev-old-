@@ -1,0 +1,42 @@
+#!/bin/bash
+#SBATCH --job-name=IRPO
+#SBATCH --account=huytran1-ic
+#SBATCH --partition=IllinoisComputes-GPU
+#SBATCH --nodes=1
+#SBATCH --ntasks=10
+#SBATCH --cpus-per-task=6
+#SBATCH --gres=gpu:2
+#SBATCH --time=3-00:00:00
+#SBATCH --output=IRPO.o%j
+#SBATCH --mail-type=FAIL
+#SBATCH --mail-user=minjae5@illinois.edu
+
+ulimit -n 4096  # raise file descriptor limit
+
+# Load conda
+source ~/.bashrc
+# Or: source /sw/apps/anaconda3/2024.10/etc/profile.d/conda.sh  # if ~/.bashrc doesn't source conda
+
+# Activate your conda environment
+conda activate irpo
+
+# === Run Experiments in Parallel ===
+
+# trust-region
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name fetchreach-v0 --algo-name irpo --intrinsic-reward-mode random --project IRPO_random &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --algo-name irpo --intrinsic-reward-mode random --project IRPO_random &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v1 --algo-name irpo --intrinsic-reward-mode random --project IRPO_random &
+
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name fetchreach-v0 --algo-name hrl --intrinsic-reward-mode random --project IRPO_random &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --algo-name hrl --intrinsic-reward-mode random --project IRPO_random &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v1 --algo-name hrl --intrinsic-reward-mode random --project IRPO_random &
+
+
+# whether soft + arg helps
+# CUDA_VISIBLE_DEVICES=0 nohup python3 main.py --env-name pointmaze-v0 --project irpo_ablation --algo-name irpo --irpo-type irpo_pick & 
+# CUDA_VISIBLE_DEVICES=1 nohup python3 main.py --env-name pointmaze-v1 --project irpo_ablation --algo-name irpo --irpo-type irpo_pick &
+
+
+
+# === Wait for all background jobs to finish ===
+wait
