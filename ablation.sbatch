@@ -1,11 +1,11 @@
 #!/bin/bash
-#SBATCH --job-name=IRPO
+#SBATCH --job-name=IRPO-ablation
 #SBATCH --account=huytran1-ic
 #SBATCH --partition=IllinoisComputes-GPU
 #SBATCH --nodes=1
 #SBATCH --ntasks=10
 #SBATCH --cpus-per-task=6
-#SBATCH --gres=gpu:2
+#SBATCH --gres=gpu:1
 #SBATCH --time=3-00:00:00
 #SBATCH --output=IRPO.o%j
 #SBATCH --mail-type=FAIL
@@ -30,15 +30,15 @@ CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --project irpo_ab
 
 # number of exploratory policy updates
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --project irpo_ablation --algo-name irpo --irpo-type irpo --num-inner-updates 2 & 
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name pointmaze-v0 --project irpo_ablation --algo-name irpo --irpo-type irpo --num-inner-updates 10 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --project irpo_ablation --algo-name irpo --irpo-type irpo --num-inner-updates 10 &
 
 # blending gradient
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name pointmaze-v0 --project irpo_ablation --algo-name irpo --irpo-type irpo_blend --irm-method linear &
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name pointmaze-v0 --project irpo_ablation --algo-name irpo --irpo-type irpo_blend --irm-method drift &
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name pointmaze-v0 --project irpo_ablation --algo-name irpo --irpo-type irpo_blend --irm-method exponential &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --project irpo_ablation --algo-name irpo --irpo-type irpo_blend --irm-method linear &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --project irpo_ablation --algo-name irpo --irpo-type irpo_blend --irm-method drift &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --project irpo_ablation --algo-name irpo --irpo-type irpo_blend --irm-method exponential &
 
 # is experiment
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name pointmaze-v0 --project irpo_ablation --algo-name irpo --irpo-type irpo_is --target-kl 0.01 & 
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --project irpo_ablation --algo-name irpo --irpo-type irpo_is --target-kl 0.01 & 
 
 
 # whether soft + arg helps
