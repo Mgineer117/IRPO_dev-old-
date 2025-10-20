@@ -5,7 +5,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=18
 #SBATCH --cpus-per-task=3
-#SBATCH --gres=gpu:3
+#SBATCH --gres=gpu:2
 #SBATCH --time=3-00:00:00
 #SBATCH --output=IRPO.o%j
 #SBATCH --mail-type=FAIL
@@ -28,19 +28,19 @@ CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --project IRPO --
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v1 --project IRPO --algo-name ppo &
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name fetchreach-v0 --project IRPO --algo-name ppo &
 
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name fourrooms-v0 --project IRPO --algo-name drndppo &
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name maze-v0 --project IRPO --algo-name drndppo &
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name maze-v1 --project IRPO --algo-name drndppo &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name fourrooms-v0 --project IRPO --algo-name drndppo &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name maze-v0 --project IRPO --algo-name drndppo &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name maze-v1 --project IRPO --algo-name drndppo &
 CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name pointmaze-v0 --project IRPO --algo-name drndppo &
 CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name pointmaze-v1 --project IRPO --algo-name drndppo &
 CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name fetchreach-v0 --project IRPO --algo-name drndppo &
 
-CUDA_VISIBLE_DEVICES=2 python3 main.py --env-name fourrooms-v0 --project IRPO --algo-name hrl &
-CUDA_VISIBLE_DEVICES=2 python3 main.py --env-name maze-v0 --project IRPO --algo-name hrl &
-CUDA_VISIBLE_DEVICES=2 python3 main.py --env-name maze-v1 --project IRPO --algo-name hrl &
-CUDA_VISIBLE_DEVICES=2 python3 main.py --env-name pointmaze-v0 --project IRPO --algo-name hrl &
-CUDA_VISIBLE_DEVICES=2 python3 main.py --env-name pointmaze-v1 --project IRPO --algo-name hrl &
-CUDA_VISIBLE_DEVICES=2 python3 main.py --env-name fetchreach-v0 --project IRPO --algo-name hrl &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name fourrooms-v0 --project IRPO --algo-name hrl &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name maze-v0 --project IRPO --algo-name hrl &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name maze-v1 --project IRPO --algo-name hrl &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name pointmaze-v0 --project IRPO --algo-name hrl &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name pointmaze-v1 --project IRPO --algo-name hrl &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name fetchreach-v0 --project IRPO --algo-name hrl &
 
 # === Wait for all background jobs to finish ===
 wait
