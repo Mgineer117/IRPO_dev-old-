@@ -5,7 +5,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=10
 #SBATCH --cpus-per-task=6
-#SBATCH --gres=gpu:1
+#SBATCH --gres=gpu:2
 #SBATCH --time=3-00:00:00
 #SBATCH --output=IRPO.o%j
 #SBATCH --mail-type=FAIL
@@ -26,13 +26,20 @@ CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name irpo --
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant &
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant &
 
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name fetchreach-v0 --algo-name irpo --intrinsic-reward-mode random --project IRPO_random &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --algo-name irpo --intrinsic-reward-mode random --project IRPO_random &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v1 --algo-name irpo --intrinsic-reward-mode random --project IRPO_random &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name ppo --irpo-type irpo --project Ant &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name ppo --irpo-type irpo --project Ant &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name ppo --irpo-type irpo --project Ant &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name ppo --irpo-type irpo --project Ant &
 
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name fetchreach-v0 --algo-name hrl --intrinsic-reward-mode random --project IRPO_random &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --algo-name hrl --intrinsic-reward-mode random --project IRPO_random &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v1 --algo-name hrl --intrinsic-reward-mode random --project IRPO_random &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v0 --algo-name trpo --irpo-type irpo --project Ant &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v1 --algo-name trpo --irpo-type irpo --project Ant &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v2 --algo-name trpo --irpo-type irpo --project Ant &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v3 --algo-name trpo --irpo-type irpo --project Ant &
+
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v0 --algo-name drndppo --irpo-type irpo --project Ant &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v1 --algo-name drndppo --irpo-type irpo --project Ant &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v2 --algo-name drndppo --irpo-type irpo --project Ant &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v3 --algo-name drndppo --irpo-type irpo --project Ant &
 
 
 
