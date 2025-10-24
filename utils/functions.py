@@ -26,6 +26,8 @@ EPI_LENGTH = {
     "antmaze-v1": 500,
     "antmaze-v2": 1000,
     "antmaze-v3": 1000,
+    "antmaze-v4": 1000,
+    "antmaze-v5": 1000,
     "fetchreach-v0": 50,
     "fetchpush-v0": 50,
 }
@@ -288,6 +290,44 @@ def call_env(args, random_spawn: bool = False):
                     [1, "r", 0, 1, 1],
                     [1, 1, 0, "g", 1],
                     [1, 1, 1, 1, 1],
+                ]
+                continuing_task = False
+        elif version == 4:
+            if random_spawn:
+                example_map = [
+                    [1, 1, 1, 1, 1, 1],
+                    [1, "c", 1, "c", "c", 1],
+                    [1, "c", 1, 1, "c", 1],
+                    [1, "c", "c", "c", "c", 1],
+                    [1, 1, 1, 1, 1, 1],
+                ]
+                continuing_task = True
+            else:
+                example_map = [
+                    [1, 1, 1, 1, 1, 1],
+                    [1, "r", 1, "g", 0, 1],
+                    [1, 0, 1, 1, 0, 1],
+                    [1, 0, 0, 0, 0, 1],
+                    [1, 1, 1, 1, 1, 1],
+                ]
+                continuing_task = False
+        elif version == 5:
+            if random_spawn:
+                example_map = [
+                    [1, 1, 1, 1, 1, 1],
+                    [1, "c", "c", "c", "c", 1],
+                    [1, 1, 1, 1, "c", 1],
+                    [1, "c", "c", "c", "c", 1],
+                    [1, 1, 1, 1, 1, 1],
+                ]
+                continuing_task = True
+            else:
+                example_map = [
+                    [1, 1, 1, 1, 1, 1],
+                    [1, "g", 0, 0, 0, 1],
+                    [1, 1, 1, 1, 0, 1],
+                    [1, "r", 0, 0, 0, 1],
+                    [1, 1, 1, 1, 1, 1],
                 ]
                 continuing_task = False
 
