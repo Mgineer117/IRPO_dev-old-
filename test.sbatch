@@ -3,8 +3,8 @@
 #SBATCH --account=huytran1-ic
 #SBATCH --partition=IllinoisComputes-GPU
 #SBATCH --nodes=1
-#SBATCH --ntasks=10
-#SBATCH --cpus-per-task=6
+#SBATCH --ntasks=22
+#SBATCH --cpus-per-task=4
 #SBATCH --gres=gpu:2
 #SBATCH --time=3-00:00:00
 #SBATCH --output=IRPO.o%j
@@ -31,10 +31,10 @@ CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name ppo --i
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name ppo --irpo-type irpo --project Ant &
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name ppo --irpo-type irpo --project Ant &
 
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v0 --algo-name trpo --irpo-type irpo --project Ant &
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v1 --algo-name trpo --irpo-type irpo --project Ant &
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v2 --algo-name trpo --irpo-type irpo --project Ant &
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v3 --algo-name trpo --irpo-type irpo --project Ant &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name trpo --irpo-type irpo --project Ant &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name trpo --irpo-type irpo --project Ant &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name trpo --irpo-type irpo --project Ant &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name trpo --irpo-type irpo --project Ant &
 
 CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v0 --algo-name drndppo --irpo-type irpo --project Ant &
 CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v1 --algo-name drndppo --irpo-type irpo --project Ant &
@@ -42,9 +42,13 @@ CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v2 --algo-name drndppo
 CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v3 --algo-name drndppo --irpo-type irpo --project Ant &
 
 
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name pointmaze-v0 --algo-name irpo --irpo-type irpo --project IRPO_random --intrinsic-reward-mode random &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name pointmaze-v1 --algo-name irpo --irpo-type irpo --project IRPO_random --intrinsic-reward-mode random &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name fetchreach-v0 --algo-name irpo --irpo-type irpo --project IRPO_random --intrinsic-reward-mode random &
 
-
-
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name pointmaze-v0 --algo-name hrl --project IRPO_random --intrinsic-reward-mode random &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name pointmaze-v1 --algo-name hrl --project IRPO_random --intrinsic-reward-mode random &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name fetchreach-v0 --algo-name hrl --project IRPO_random --intrinsic-reward-mode random &
 
 
 # === Wait for all background jobs to finish ===
