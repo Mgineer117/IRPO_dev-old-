@@ -22,14 +22,14 @@ EPI_LENGTH = {
     "pointmaze-v1": 500,
     "pointmazedense-v0": 500,
     "pointmazedense-v1": 500,
-    "antmaze-v0": 100,
-    "antmaze-v1": 100,
-    "antmaze-v2": 200,
-    "antmaze-v3": 200,
-    "antmaze-v4": 500,
-    "antmaze-v5": 500,
+    "antmaze-v0": 250,
+    "antmaze-v1": 250,
+    "antmaze-v2": 500,
+    "antmaze-v3": 500,
+    "antmaze-v4": 1000,
+    "antmaze-v5": 1000,
     "fetchreach-v0": 50,
-    "fetchpush-v0": 50,
+    "fetchpush-v0": 100,
 }
 
 
