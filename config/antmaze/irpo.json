@@ -4,7 +4,7 @@
     "K_epochs": 5,
     "outer_actor_lr": 1e-3,
     "inner_actor_lr": 1e-1,
-    "num_inner_updates": 25,
+    "num_inner_updates": 10,
     "target_kl": 0.01,
     "gamma": 0.995,
     "num_options": 4,
