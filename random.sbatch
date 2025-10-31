@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=IRPO-test
+#SBATCH --job-name=IRPO-random
 #SBATCH --account=huytran1-ic
 #SBATCH --partition=IllinoisComputes-GPU
 #SBATCH --nodes=1
@@ -21,13 +21,13 @@ source ~/.bashrc
 conda activate irpo
 
 # === Run Experiments in Parallel ===
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --algo-name irpo --irpo-type irpo --intrinsic-reward-mode random &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v1 --algo-name irpo --irpo-type irpo --intrinsic-reward-mode random &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name fetchreach-v0 --algo-name irpo --irpo-type irpo --intrinsic-reward-mode random &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --algo-name irpo --irpo-type irpo --intrinsic-reward-mode random --project IRPO_random &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v1 --algo-name irpo --irpo-type irpo --intrinsic-reward-mode random --project IRPO_random &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name fetchreach-v0 --algo-name irpo --irpo-type irpo --intrinsic-reward-mode random --project IRPO_random &
 
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --algo-name hrl --intrinsic-reward-mode random &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v1 --algo-name hrl --intrinsic-reward-mode random &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name fetchreach-v0 --algo-name hrl --intrinsic-reward-mode random &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v0 --algo-name hrl --intrinsic-reward-mode random --project IRPO_random &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name pointmaze-v1 --algo-name hrl --intrinsic-reward-mode random --project IRPO_random &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name fetchreach-v0 --algo-name hrl --intrinsic-reward-mode random --project IRPO_random &
 
 
 # === Wait for all background jobs to finish ===
