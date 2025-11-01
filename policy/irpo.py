@@ -210,7 +210,7 @@ class IRPO_Learner(Base):
                     timesteps = batch["states"].shape[0]
 
                 # === Update probability history using exponential moving average === #
-                beta = 0.995
+                beta = 0.9995
                 self.probability_history[i] = (
                     beta * self.probability_history[i]
                     + (1 - beta) * batch["rewards"].mean()
