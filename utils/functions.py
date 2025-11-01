@@ -29,7 +29,7 @@ EPI_LENGTH = {
     "antmaze-v4": 1000,
     "antmaze-v5": 1000,
     "fetchreach-v0": 50,
-    "fetchpush-v0": 100,
+    "fetchpush-v0": 250,
 }
 
 
