@@ -475,3 +475,42 @@ class MazeWrapper(gym.Wrapper):
         rgb_img[~mask, :] = 0.5
 
         return rgb_img
+
+
+class AantMazeWrapper(MazeWrapper):
+    def __init__(
+        self,
+        env: gym.Env,
+        maze_map: list,
+        episode_len: int,
+        seed: int,
+        cell_size: int = 1.0,
+    ):
+        super().__init__(
+            env,
+            maze_map=maze_map,
+            episode_len=episode_len,
+            seed=seed,
+            cell_size=cell_size,
+        )
+
+    def __getattr__(self, name):
+        # Forward any unknown attribute to the inner environment
+        return getattr(self.env, name)
+
+    def step(self, action):
+        action = np.clip(
+            action, 0.5 * self.env.action_space.low, 0.5 * self.env.action_space.high
+        )
+        # Call the original step method
+        observation_dict, reward, termination, truncation, info = self.env.step(action)
+        observation = np.concatenate(
+            (
+                observation_dict["observation"],
+                observation_dict["achieved_goal"],
+                observation_dict["desired_goal"],
+            )
+        )
+
+        self.trajectory.append(observation_dict["achieved_goal"].copy())
+        return observation, reward, termination, truncation, info
