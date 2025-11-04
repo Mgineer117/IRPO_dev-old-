@@ -111,6 +111,7 @@ class FetchWrapper(gym.Wrapper):
 
         reward += 1.0  # to scale reawrd [0, 1]
 
+        # if reward == 1.0:
         if reward == 1.0:
             termination = True  # terminate if goal is achieved
 
@@ -499,9 +500,9 @@ class AantMazeWrapper(MazeWrapper):
         return getattr(self.env, name)
 
     def step(self, action):
-        action = np.clip(
-            action, 0.5 * self.env.action_space.low, 0.5 * self.env.action_space.high
-        )
+        # action = np.clip(
+        #     action, 0.5 * self.env.action_space.low, 0.5 * self.env.action_space.high
+        # )
         # Call the original step method
         observation_dict, reward, termination, truncation, info = self.env.step(action)
         observation = np.concatenate(
@@ -511,6 +512,13 @@ class AantMazeWrapper(MazeWrapper):
                 observation_dict["desired_goal"],
             )
         )
+
+        if (
+            observation_dict["observation"][0] >= 1.2
+            or observation_dict["observation"][0] <= 0.2
+        ):
+            reward -= 1.0
+            termination = True
 
         self.trajectory.append(observation_dict["achieved_goal"].copy())
         return observation, reward, termination, truncation, info
