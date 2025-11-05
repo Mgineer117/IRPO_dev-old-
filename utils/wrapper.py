@@ -502,9 +502,6 @@ class AantMazeWrapper(MazeWrapper):
         return getattr(self.env, name)
 
     def step(self, action):
-        # action = np.clip(
-        #     action, 0.5 * self.env.action_space.low, 0.5 * self.env.action_space.high
-        # )
         # Call the original step method
         observation_dict, reward, termination, truncation, info = self.env.step(action)
         observation = np.concatenate(
