@@ -21,12 +21,12 @@ source ~/.bashrc
 conda activate irpo
 
 # === Run Experiments in Parallel ===
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 10 --target-kl 0.01 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 10 --target-kl 0.01 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 10 --target-kl 0.01 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 10 --target-kl 0.01 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v4 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 10 --target-kl 0.01 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v5 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 10 --target-kl 0.01 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 10 --target-kl 0.01 --rendering &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 10 --target-kl 0.01 --rendering &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 10 --target-kl 0.01 --rendering &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 10 --target-kl 0.01 --rendering &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v4 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 10 --target-kl 0.01 --rendering &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v5 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 10 --target-kl 0.01 --rendering &
 
 # === Wait for all background jobs to finish ===
 wait

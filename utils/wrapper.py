@@ -513,7 +513,7 @@ class AantMazeWrapper(MazeWrapper):
         )
 
         if (
-            observation_dict["observation"][0] >= 1.2
+            observation_dict["observation"][0] >= 1.0
             or observation_dict["observation"][0] <= 0.2
         ):
             reward -= self.healthy_penalty
