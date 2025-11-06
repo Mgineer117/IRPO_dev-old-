@@ -495,7 +495,7 @@ class AantMazeWrapper(MazeWrapper):
             cell_size=cell_size,
         )
 
-        self.healthy_penalty = 0.1  # 1.0 / self.max_steps
+        self.healthy_penalty = 1.0  # 1.0 / self.max_steps
 
     def __getattr__(self, name):
         # Forward any unknown attribute to the inner environment
