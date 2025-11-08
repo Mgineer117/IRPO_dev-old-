@@ -495,7 +495,7 @@ class AantMazeWrapper(MazeWrapper):
             cell_size=cell_size,
         )
 
-        self.healthy_penalty = 1.0  # 1.0 / self.max_steps
+        self.healthy_penalty = 0.01  # 10.0 / self.max_steps
 
     def __getattr__(self, name):
         # Forward any unknown attribute to the inner environment
@@ -517,7 +517,7 @@ class AantMazeWrapper(MazeWrapper):
             or observation_dict["observation"][0] <= 0.2
         ):
             reward -= self.healthy_penalty
-            termination = True
+            # termination = True
 
         self.trajectory.append(observation_dict["achieved_goal"].copy())
         return observation, reward, termination, truncation, info
