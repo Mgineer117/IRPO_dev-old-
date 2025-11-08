@@ -4,7 +4,7 @@
 #SBATCH --partition=IllinoisComputes-GPU
 #SBATCH --nodes=1
 #SBATCH --ntasks=6
-#SBATCH --cpus-per-task=6
+#SBATCH --cpus-per-task=4
 #SBATCH --gres=gpu:1
 #SBATCH --time=3-00:00:00
 #SBATCH --output=IRPO.o%j
