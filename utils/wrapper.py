@@ -516,8 +516,9 @@ class AantMazeWrapper(MazeWrapper):
             observation_dict["observation"][0] >= 1.0
             or observation_dict["observation"][0] <= 0.2
         ):
-            reward -= self.healthy_penalty
-            # termination = True
+            # reward -= self.healthy_penalty
+            reward -= 1.0
+            termination = True
 
         self.trajectory.append(observation_dict["achieved_goal"].copy())
         return observation, reward, termination, truncation, info
