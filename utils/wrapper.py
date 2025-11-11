@@ -513,7 +513,7 @@ class AantMazeWrapper(MazeWrapper):
         )
 
         if (
-            observation_dict["observation"][0] >= 1.0
+            observation_dict["observation"][0] >= 1.2
             or observation_dict["observation"][0] <= 0.35
         ):
             option = 2
