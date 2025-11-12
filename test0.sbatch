@@ -1,9 +1,9 @@
 #!/bin/bash
-#SBATCH --job-name=IRPO-test
+#SBATCH --job-name=IRPO-Ant1
 #SBATCH --account=huytran1-ic
 #SBATCH --partition=IllinoisComputes-GPU
 #SBATCH --nodes=1
-#SBATCH --ntasks=6
+#SBATCH --ntasks=8
 #SBATCH --cpus-per-task=6
 #SBATCH --gres=gpu:1
 #SBATCH --time=3-00:00:00
@@ -27,8 +27,13 @@ CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name irpo --
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name irpo --irpo-type irpo --project Ant --rendering &
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant --rendering &
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant --rendering &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v4 --algo-name irpo --irpo-type irpo --project Ant --rendering &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v5 --algo-name irpo --irpo-type irpo --project Ant --rendering &
+
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name ppo --project Ant --rendering &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name ppo --project Ant --rendering &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name ppo --project Ant --rendering &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name ppo --project Ant --rendering &
+
+
 
 # === Wait for all background jobs to finish ===
 wait

@@ -1,10 +1,10 @@
 #!/bin/bash
-#SBATCH --job-name=IRPO-test
+#SBATCH --job-name=IRPO-Ant2
 #SBATCH --account=huytran1-ic
 #SBATCH --partition=IllinoisComputes-GPU
 #SBATCH --nodes=1
-#SBATCH --ntasks=18
-#SBATCH --cpus-per-task=2
+#SBATCH --ntasks=12
+#SBATCH --cpus-per-task=4
 #SBATCH --gres=gpu:1
 #SBATCH --time=3-00:00:00
 #SBATCH --output=IRPO.o%j
@@ -23,26 +23,20 @@ conda activate irpo
 export MUJOCO_GL=osmesa
 
 # === Run Experiments in Parallel ===
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name ppo --project Ant --rendering &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name ppo --project Ant --rendering &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name ppo --project Ant --rendering &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name ppo --project Ant --rendering &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v4 --algo-name ppo --project Ant --rendering &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v5 --algo-name ppo --project Ant --rendering &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name trpo --project Ant --rendering &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name trpo --project Ant --rendering &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name trpo --project Ant --rendering &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name trpo --project Ant --rendering &
 
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name hrl --project Ant --rendering &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name hrl --project Ant --rendering &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name hrl --project Ant --rendering &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name hrl --project Ant --rendering &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v4 --algo-name hrl --project Ant --rendering &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v5 --algo-name hrl --project Ant --rendering &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name psne --project Ant --rendering &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name psne --project Ant --rendering &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name psne --project Ant --rendering &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name psne --project Ant --rendering &
 
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name drndppo --project Ant --rendering &
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name drndppo --project Ant --rendering &
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name drndppo --project Ant --rendering &
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name drndppo --project Ant --rendering &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v4 --algo-name drndppo --project Ant --rendering &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v5 --algo-name drndppo --project Ant --rendering &
 
 
 # === Wait for all background jobs to finish ===
