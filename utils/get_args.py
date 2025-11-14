@@ -89,7 +89,7 @@ def get_args():
     parser.add_argument(
         "--actor-fc-dim",
         type=int,
-        default=[256, 256],
+        default=[128, 128],
         nargs="+",
         help="actor fc layer dimensions.",
     )
