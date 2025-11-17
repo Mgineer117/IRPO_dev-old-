@@ -1,5 +1,5 @@
 {
-    "timesteps": 5e8,
+    "timesteps": 1e8,
     "target_kl": 0.03,
     "gamma": 0.9995,
     "batch_size": 32768 

@@ -350,6 +350,8 @@ class IRPO_Learner(Base):
         actions = self.preprocess_state(batch["actions"])
         extrinsic_rewards = self.preprocess_state(batch["rewards"])
         intrinsic_rewards, source = self.intrinsic_reward_fn(states, next_states, i)
+        # add auxiliary pose reward to intrinsic rewards (only use negative rewards by extrinsicrewards)
+        # intrinsic_rewards -= extrinsic_rewards.clamp(max=0)
         terminals = self.preprocess_state(batch["terminals"])
 
         # === Compute advantages and returns === #
