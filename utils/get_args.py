@@ -192,7 +192,7 @@ def get_args():
     )
 
     parser.add_argument(
-        "--log-interval", type=int, default=200, help="Interval for logging results."
+        "--log-interval", type=int, default=100, help="Interval for logging results."
     )
     parser.add_argument(
         "--eval-num", type=int, default=10, help="Number of evaluation episodes."
