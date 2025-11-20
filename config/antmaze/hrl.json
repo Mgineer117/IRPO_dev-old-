@@ -3,7 +3,7 @@
     "timesteps": 2e7,
     "eps_clip": 0.2,
     "K_epochs": 5,
-    "target_kl": 0.01,
+    "target_kl": 0.05,
     "gamma": 0.9999,
     "num_options": 3,
     "num_minibatch": 4,

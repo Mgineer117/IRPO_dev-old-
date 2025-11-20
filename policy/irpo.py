@@ -144,7 +144,7 @@ class IRPO_Learner(Base):
         probability_history: torch.Tensor, shape [num_actions]
         learning_progress: float in [0, 1]
         """
-        target = 0.25
+        target = 0.1
         learning_progress = learning_progress / target + epsilon
         probability_history = torch.tensor(self.probability_history).to(self.device)
 
