@@ -31,8 +31,5 @@ CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name irpo --
 
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Exp --rendering --num-inner-updates 20 &
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Exp --rendering --num-inner-updates 20 &
-
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Exp --rendering --num-inner-updates 10 --inner-actor-lr 0.01 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Exp --rendering --num-inner-updates 10 --inner-actor-lr 0.01 &
 # === Wait for all background jobs to finish ===
 wait
