@@ -23,23 +23,23 @@ conda activate irpo
 export MUJOCO_GL=osmesa
 
 # === Run Experiments in Parallel ===
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Exp --rendering --target-kl 0.01 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Exp --rendering --target-kl 0.01 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant --rendering --target-kl 0.01 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant --rendering --target-kl 0.01 &
 
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Exp --rendering --target-kl 0.03 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Exp --rendering --target-kl 0.03 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant --rendering --target-kl 0.03 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant --rendering --target-kl 0.03 &
 
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Exp --rendering --target-kl 0.01 --inner-actor-lr 0.3 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Exp --rendering --target-kl 0.01 --inner-actor-lr 0.3 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant --rendering --target-kl 0.01 --inner-actor-lr 0.3 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant --rendering --target-kl 0.01 --inner-actor-lr 0.3 &
 
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Exp --rendering --target-kl 0.01 --inner-actor-lr 0.3 --target-kl 0.01 &
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Exp --rendering --target-kl 0.01 --inner-actor-lr 0.3 --target-kl 0.01 &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant --rendering --target-kl 0.01 --inner-actor-lr 0.3 --target-kl 0.01 &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant --rendering --target-kl 0.01 --inner-actor-lr 0.3 --target-kl 0.01 &
 
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Exp --rendering --num-inner-updates 20 --target-kl 0.01 &
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Exp --rendering --num-inner-updates 20 --target-kl 0.01 &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant --rendering --num-inner-updates 20 --target-kl 0.01 &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant --rendering --num-inner-updates 20 --target-kl 0.01 &
 
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Exp --rendering --num-inner-updates 20 &
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Exp --rendering --num-inner-updates 20 &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant --rendering --num-inner-updates 20 &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant --rendering --num-inner-updates 20 &
 
 
 # === Wait for all background jobs to finish ===
