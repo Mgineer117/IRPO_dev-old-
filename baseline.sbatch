@@ -3,9 +3,9 @@
 #SBATCH --account=huytran1-ic
 #SBATCH --partition=IllinoisComputes-GPU
 #SBATCH --nodes=1
-#SBATCH --ntasks=10
-#SBATCH --cpus-per-task=6
-#SBATCH --gres=gpu:1
+#SBATCH --ntasks=20
+#SBATCH --cpus-per-task=3
+#SBATCH --gres=gpu:2
 #SBATCH --time=3-00:00:00
 #SBATCH --output=IRPO.o%j
 #SBATCH --mail-type=FAIL
@@ -23,20 +23,30 @@ conda activate irpo
 export MUJOCO_GL=osmesa
 
 # === Run Experiments in Parallel ===
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name ppo --project Ant --rendering &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name ppo --project Ant --rendering &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name ppo --project Ant-Exp --rendering &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name ppo --project Ant-Exp --rendering &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name ppo --project Ant-Exp --rendering &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name ppo --project Ant-Exp --rendering &
 
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name trpo --project Ant --rendering &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name trpo --project Ant --rendering &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name trpo --project Ant-Exp --rendering &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name trpo --project Ant-Exp --rendering &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name trpo --project Ant-Exp --rendering &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name trpo --project Ant-Exp --rendering &
 
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name psne --project Ant --rendering &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name psne --project Ant --rendering &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name psne --project Ant-Exp --rendering &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name psne --project Ant-Exp --rendering &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v2 --algo-name psne --project Ant-Exp --rendering &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v3 --algo-name psne --project Ant-Exp --rendering &
 
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name drndppo --project Ant --rendering &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name drndppo --project Ant --rendering &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v0 --algo-name drndppo --project Ant-Exp --rendering &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v1 --algo-name drndppo --project Ant-Exp --rendering &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v2 --algo-name drndppo --project Ant-Exp --rendering &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v3 --algo-name drndppo --project Ant-Exp --rendering &
 
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name hrl --project Ant --rendering &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name hrl --project Ant --rendering &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v0 --algo-name hrl --project Ant-Exp --rendering &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v1 --algo-name hrl --project Ant-Exp --rendering &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v2 --algo-name hrl --project Ant-Exp --rendering &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v3 --algo-name hrl --project Ant-Exp --rendering &
 
 
 

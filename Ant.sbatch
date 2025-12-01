@@ -3,8 +3,8 @@
 #SBATCH --account=huytran1-ic
 #SBATCH --partition=IllinoisComputes-GPU
 #SBATCH --nodes=1
-#SBATCH --ntasks=12
-#SBATCH --cpus-per-task=5
+#SBATCH --ntasks=16
+#SBATCH --cpus-per-task=4
 #SBATCH --gres=gpu:2
 #SBATCH --time=3-00:00:00
 #SBATCH --output=IRPO.o%j
@@ -23,24 +23,26 @@ conda activate irpo
 export MUJOCO_GL=osmesa
 
 # === Run Experiments in Parallel ===
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant --rendering --target-kl 0.01 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant --rendering --target-kl 0.01 &
 
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant --rendering --target-kl 0.03 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant --rendering --target-kl 0.03 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name irpo --irpo-type irpo --project Ant-Exp --rendering --target-kl 0.003 --num_inner_updates 5 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name irpo --irpo-type irpo --project Ant-Exp --rendering --target-kl 0.003 --num_inner_updates 5 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant-Exp --rendering --target-kl 0.003 --num_inner_updates 5 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant-Exp --rendering --target-kl 0.003 --num_inner_updates 5 &
 
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant --rendering --target-kl 0.01 --inner-actor-lr 0.3 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant --rendering --target-kl 0.01 --inner-actor-lr 0.3 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name irpo --irpo-type irpo --project Ant-Exp --rendering --target-kl 0.01 --num_inner_updates 5 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name irpo --irpo-type irpo --project Ant-Exp --rendering --target-kl 0.01 --num_inner_updates 5 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant-Exp --rendering --target-kl 0.01 --num_inner_updates 5 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant-Exp --rendering --target-kl 0.01 --num_inner_updates 5 &
 
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant --rendering --target-kl 0.01 --inner-actor-lr 0.3 --target-kl 0.01 &
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant --rendering --target-kl 0.01 --inner-actor-lr 0.3 --target-kl 0.01 &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v0 --algo-name irpo --irpo-type irpo --project Ant-Exp --rendering --target-kl 0.003 &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v1 --algo-name irpo --irpo-type irpo --project Ant-Exp --rendering --target-kl 0.003 &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant-Exp --rendering --target-kl 0.003 &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant-Exp --rendering --target-kl 0.003 &
 
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant --rendering --num-inner-updates 20 --target-kl 0.01 &
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant --rendering --num-inner-updates 20 --target-kl 0.01 &
-
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant --rendering --num-inner-updates 20 &
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant --rendering --num-inner-updates 20 &
-
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v0 --algo-name irpo --irpo-type irpo --project Ant-Exp --rendering --target-kl 0.01 &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v1 --algo-name irpo --irpo-type irpo --project Ant-Exp --rendering --target-kl 0.01 &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant-Exp --rendering --target-kl 0.01 &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant-Exp --rendering --target-kl 0.01 &
 
 # === Wait for all background jobs to finish ===
 wait
