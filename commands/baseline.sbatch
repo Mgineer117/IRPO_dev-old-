@@ -98,7 +98,3 @@ CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v3 --algo-name trpo --
 
 wait
 echo "All seeds finished."
-
-
-# === Wait for all background jobs to finish ===
-wait
