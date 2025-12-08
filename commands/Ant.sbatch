@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=IRPO-Ant1
+#SBATCH --job-name=Ant1
 #SBATCH --account=huytran1-ic
 #SBATCH --partition=IllinoisComputes-GPU
 #SBATCH --nodes=1
