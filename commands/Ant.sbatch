@@ -3,9 +3,9 @@
 #SBATCH --account=huytran1-ic
 #SBATCH --partition=IllinoisComputes-GPU
 #SBATCH --nodes=1
-#SBATCH --ntasks=12
-#SBATCH --cpus-per-task=5
-#SBATCH --gres=gpu:3
+#SBATCH --ntasks=4
+#SBATCH --cpus-per-task=6
+#SBATCH --gres=gpu:1
 #SBATCH --time=3-00:00:00
 #SBATCH --output=IRPO.o%j
 #SBATCH --mail-type=FAIL
@@ -37,15 +37,15 @@ export MUJOCO_GL=osmesa
 # wait 
 # echo "Finished SEED 0. Starting SEED 1..."
 
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 2 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 2 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 2 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 2 --num-runs 1 &
+# CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 2 --num-runs 1 &
+# CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 2 --num-runs 1 &
+# CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 2 --num-runs 1 &
+# CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 2 --num-runs 1 &
 
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v0 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 3 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v1 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 3 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 3 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 3 --num-runs 1 &
+# CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v0 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 3 --num-runs 1 &
+# CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v1 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 3 --num-runs 1 &
+# CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 3 --num-runs 1 &
+# CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 3 --num-runs 1 &
 
 # # Wait for all Seed 0 jobs to finish before continuing
 # wait 
