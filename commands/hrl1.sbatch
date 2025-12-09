@@ -3,7 +3,7 @@
 #SBATCH --account=huytran1-ic
 #SBATCH --partition=IllinoisComputes-GPU
 #SBATCH --nodes=1
-#SBATCH --ntasks=4
+#SBATCH --ntasks=5
 #SBATCH --cpus-per-task=6
 #SBATCH --gres=gpu:1
 #SBATCH --time=3-00:00:00
@@ -31,46 +31,17 @@ CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name hrl --p
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name hrl --project Ant --seed 0 --num-runs 1 &
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name hrl --project Ant --seed 0 --num-runs 1 &
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name hrl --project Ant --seed 0 --num-runs 1 &
-
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name hrl --project Ant --seed 1 --num-runs 1 &
 
 # Wait for all Seed 0 jobs to finish before continuing
 wait 
 echo "Finished SEED 0. Starting SEED 1..."
 
-# --- SEED 1 BLOCK ---
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name hrl --project Ant --seed 1 --num-runs 1 &
+
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name hrl --project Ant --seed 1 --num-runs 1 &
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name hrl --project Ant --seed 1 --num-runs 1 &
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name hrl --project Ant --seed 1 --num-runs 1 &
-
-# Wait for all Seed 1 jobs to finish
-wait
-echo "Finished SEED 1. Starting SEED 2..."
-
-# --- SEED 2 BLOCK ---
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name hrl --project Ant --seed 2 --num-runs 1 &
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name hrl --project Ant --seed 2 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name hrl --project Ant --seed 2 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name hrl --project Ant --seed 2 --num-runs 1 &
 
 wait
-echo "All seeds finished."
-
-
-# --- SEED 2 BLOCK ---
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name hrl --project Ant --seed 3 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name hrl --project Ant --seed 3 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name hrl --project Ant --seed 3 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name hrl --project Ant --seed 3 --num-runs 1 &
-
-wait
-echo "All seeds finished."
-
-# --- SEED 2 BLOCK ---
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name hrl --project Ant --seed 4 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name hrl --project Ant --seed 4 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name hrl --project Ant --seed 4 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name hrl --project Ant --seed 4 --num-runs 1 &
-
-wait
-echo "All seeds finished."
