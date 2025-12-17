@@ -1,12 +1,12 @@
 #!/bin/bash
 #SBATCH --job-name=IRPO-Ant1
 #SBATCH --account=huytran1-ic
-#SBATCH --partition=IllinoisComputes-GPU
+#SBATCH --partition=eng-research-gpu
 #SBATCH --nodes=1
-#SBATCH --ntasks=8
-#SBATCH --cpus-per-task=6
-#SBATCH --gres=gpu:1
-#SBATCH --time=3-00:00:00
+#SBATCH --ntasks=4
+#SBATCH --cpus-per-task=8
+#SBATCH --gres=gpu:2
+#SBATCH --time=2-00:00:00
 #SBATCH --output=IRPO.o%j
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=minjae5@illinois.edu
@@ -25,8 +25,8 @@ export MUJOCO_GL=osmesa
 # === Run Experiments in Parallel ===
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name irpo --irpo-type irpo --project Ant-test --rendering &
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name irpo --irpo-type irpo --project Ant-test --rendering &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant-test --rendering &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant-test --rendering &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant-test --rendering &
+CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant-test --rendering &
 
 
 # === Wait for all background jobs to finish ===
