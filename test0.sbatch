@@ -3,9 +3,9 @@
 #SBATCH --account=huytran1-ic
 #SBATCH --partition=eng-research-gpu
 #SBATCH --nodes=1
-#SBATCH --ntasks=6
+#SBATCH --ntasks=8
 #SBATCH --cpus-per-task=8
-#SBATCH --gres=gpu:3
+#SBATCH --gres=gpu:4
 #SBATCH --time=2-00:00:00
 #SBATCH --output=IRPO.o%j
 #SBATCH --mail-type=FAIL
@@ -29,6 +29,8 @@ CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v2 --algo-name irpo --
 CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant-test --rendering --num-inner-updates 10 &
 CUDA_VISIBLE_DEVICES=2 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant-test --rendering --num-inner-updates 15 &
 CUDA_VISIBLE_DEVICES=2 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant-test --rendering --num-inner-updates 15 &
+CUDA_VISIBLE_DEVICES=3 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant-test --rendering --num-inner-updates 20 &
+CUDA_VISIBLE_DEVICES=3 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant-test --rendering --num-inner-updates 20 &
 
 
 # === Wait for all background jobs to finish ===
