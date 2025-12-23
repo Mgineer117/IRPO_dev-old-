@@ -3,14 +3,14 @@
     "eps_clip": 0.2,
     "K_epochs": 5,
     "outer_actor_lr": 1e-3,
-    "inner_actor_lr": 0.01,
+    "inner_actor_lr": 0.03,
     "num_inner_updates": 5,
     "target_kl": 0.0003,
     "gamma": 0.9999,
     "num_options": 3,
     "num_minibatch": 4,
-    "minibatch_size": 4096,
-    "batch_size": 16384,
+    "minibatch_size": 2048,
+    "batch_size": 8192,
     "intrinsic_reward_mode": "allo",
     "discount_sampling_factor": 0.995
 }
