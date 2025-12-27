@@ -144,7 +144,7 @@ class IRPO_Learner(Base):
         probability_history: torch.Tensor, shape [num_actions]
         learning_progress: float in [0, 1]
         """
-        target = 0.1
+        target = 0.05
         learning_progress = learning_progress / target + epsilon
         probability_history = torch.tensor(self.probability_history).to(self.device)
 
@@ -351,6 +351,8 @@ class IRPO_Learner(Base):
         extrinsic_rewards = self.preprocess_state(batch["rewards"])
         intrinsic_rewards, source = self.intrinsic_reward_fn(states, next_states, i)
         terminals = self.preprocess_state(batch["terminals"])
+
+        # intrinsic_rewards += extrinsic_rewards
 
         # === Compute advantages and returns === #
         with torch.no_grad():

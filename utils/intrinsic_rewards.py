@@ -33,6 +33,7 @@ class IntrinsicRewardFunctions(nn.Module):
             self.extractor_mode = "allo"
             self.define_extractor()
             self.define_eigenvectors()
+            self.define_intrinsic_reward_normalizer()
 
             self.sources = ["allo" for _ in range(self.num_rewards)]
         elif self.args.intrinsic_reward_mode == "drnd":
@@ -58,6 +59,7 @@ class IntrinsicRewardFunctions(nn.Module):
 
             self.define_random_model()
             self.define_eigenvectors()
+            self.define_intrinsic_reward_normalizer()
 
             self.sources = ["random" for _ in range(self.args.num_options)]
         else:
@@ -79,6 +81,8 @@ class IntrinsicRewardFunctions(nn.Module):
                 intrinsic_rewards = eigenvector_sign * difference[
                     :, eigenvector_idx
                 ].unsqueeze(-1)
+
+            # intrinsic_rewards *= 100
         elif self.sources[i] == "drnd":
             with torch.no_grad():
                 intrinsic_rewards = self.drnd_policy.intrinsic_reward(next_states)
@@ -95,6 +99,16 @@ class IntrinsicRewardFunctions(nn.Module):
                 intrinsic_rewards = eigenvector_sign * difference[
                     :, eigenvector_idx
                 ].unsqueeze(-1)
+
+        if hasattr(self, "reward_rms") and self.sources[i] != "drnd":
+            # drnd has its own normalizer in itself
+            self.reward_rms[i].update(intrinsic_rewards.cpu().numpy())
+            var_tensor = torch.as_tensor(
+                self.reward_rms[i].var,
+                device=intrinsic_rewards.device,
+                dtype=intrinsic_rewards.dtype,
+            )
+            intrinsic_rewards = intrinsic_rewards / (torch.sqrt(var_tensor) + 1e-8)
 
         return intrinsic_rewards, self.sources[i]
 
@@ -348,3 +362,11 @@ class IntrinsicRewardFunctions(nn.Module):
             discount=self.args.discount_sampling_factor,  # ALLO uses 0.99 discount
             device=self.args.device,
         )
+
+    def define_intrinsic_reward_normalizer(self):
+        from utils.wrapper import RunningMeanStd
+
+        self.reward_rms = []
+        # DRND method has its own rms its own class
+        for _ in range(self.args.num_options):
+            self.reward_rms.append(RunningMeanStd(shape=(1,)))
