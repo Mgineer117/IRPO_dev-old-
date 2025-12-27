@@ -5,7 +5,7 @@
     "outer_actor_lr": 1e-3,
     "inner_actor_lr": 0.01,
     "num_inner_updates": 5,
-    "target_kl": 0.0003,
+    "target_kl": 0.0001,
     "gamma": 0.9999,
     "num_options": 3,
     "num_minibatch": 4,
