@@ -39,21 +39,3 @@ CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v3 --algo-name psne --
 CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v1 --algo-name psne --project Ant --seed 2 --num-runs 1 &
 
 wait
-echo "All seeds finished."
-
-# --- SEED 2 BLOCK ---
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name drndppo --project Ant --seed 4 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name drndppo --project Ant --seed 4 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name drndppo --project Ant --seed 4 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name drndppo --project Ant --seed 4 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name psne --project Ant --seed 2 --num-runs 1 &
-
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v0 --algo-name psne --project Ant --seed 4 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v1 --algo-name psne --project Ant --seed 4 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v2 --algo-name psne --project Ant --seed 4 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v3 --algo-name psne --project Ant --seed 4 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v3 --algo-name psne --project Ant --seed 2 --num-runs 1 &
-
-
-wait
-echo "All seeds finished."
