@@ -32,13 +32,3 @@ CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name hrl --p
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name hrl --project Ant --seed 3 --num-runs 1 &
 
 wait
-echo "All seeds finished."
-
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name hrl --project Ant --seed 3 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name hrl --project Ant --seed 4 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name hrl --project Ant --seed 4 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name hrl --project Ant --seed 4 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name hrl --project Ant --seed 4 --num-runs 1 &
-
-wait
-echo "All seeds finished."

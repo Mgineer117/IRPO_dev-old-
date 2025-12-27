@@ -35,13 +35,3 @@ CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name hrl --p
 
 # Wait for all Seed 0 jobs to finish before continuing
 wait 
-echo "Finished SEED 0. Starting SEED 1..."
-
-
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name hrl --project Ant --seed 1 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name hrl --project Ant --seed 1 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name hrl --project Ant --seed 1 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name hrl --project Ant --seed 2 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name hrl --project Ant --seed 2 --num-runs 1 &
-
-wait

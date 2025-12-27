@@ -25,22 +25,6 @@ export MUJOCO_GL=osmesa
 # === Run Experiments in Parallel ===
 #!/bin/bash
 
-echo "Starting SEED 0..."
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name ppo --project Ant --seed 3 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name ppo --project Ant --seed 3 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name ppo --project Ant --seed 3 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name ppo --project Ant --seed 3 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name trpo --project Ant --seed 2 --num-runs 1 &
-
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v0 --algo-name trpo --project Ant --seed 3 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v1 --algo-name trpo --project Ant --seed 3 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v2 --algo-name trpo --project Ant --seed 3 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v3 --algo-name trpo --project Ant --seed 3 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v1 --algo-name trpo --project Ant --seed 2 --num-runs 1 &
-
-wait
-echo "All seeds finished."
-
 # --- SEED 2 BLOCK ---
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name ppo --project Ant --seed 4 --num-runs 1 &
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name ppo --project Ant --seed 4 --num-runs 1 &
