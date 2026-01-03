@@ -41,4 +41,3 @@ CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v3 --algo-name psne --
 
 
 wait
-echo "All seeds finished."
