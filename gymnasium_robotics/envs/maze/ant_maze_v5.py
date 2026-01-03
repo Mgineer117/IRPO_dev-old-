@@ -297,7 +297,7 @@ class AntMazeEnv(MazeEnv, EzPickle):
         reward = self.compute_reward(obs["achieved_goal"], self.goal, info)
         terminated = self.compute_terminated(obs["achieved_goal"], self.goal, info)
         truncated = self.compute_truncated(obs["achieved_goal"], self.goal, info)
-        info["success"] = bool(np.linalg.norm(obs["achieved_goal"] - self.goal) <= 0.45)
+        info["success"] = bool(np.linalg.norm(obs["achieved_goal"] - self.goal) <= 0.8)
 
         if self.render_mode == "human":
             self.render()

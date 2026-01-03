@@ -379,7 +379,7 @@ class MazeEnv(GoalEnv):
         if self.reward_type == "dense":
             return np.exp(-distance)
         elif self.reward_type == "sparse":
-            return (distance <= 0.45).astype(np.float64)
+            return (distance <= 0.8).astype(np.float64)
 
     def compute_terminated(
         self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info
