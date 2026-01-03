@@ -386,7 +386,7 @@ class MazeEnv(GoalEnv):
     ) -> bool:
         if not self.continuing_task:
             # If task is episodic terminate the episode when the goal is reached
-            return bool(np.linalg.norm(achieved_goal - desired_goal) <= 0.45)
+            return bool(np.linalg.norm(achieved_goal - desired_goal) <= 0.8)
         else:
             # Continuing tasks don't terminate, episode will be truncated when time limit is reached (`max_episode_steps`)
             return False
@@ -397,12 +397,12 @@ class MazeEnv(GoalEnv):
         if (
             self.continuing_task
             and self.reset_target
-            and bool(np.linalg.norm(achieved_goal - self.goal) <= 0.45)
+            and bool(np.linalg.norm(achieved_goal - self.goal) <= 0.8)
             and len(self.maze.unique_goal_locations) > 1
         ):
-            # Generate a goal while within 0.45 of achieved_goal. The distance check above
+            # Generate a goal while within 0.8 of achieved_goal. The distance check above
             # is not redundant, it avoids calling update_target_site_pos() unless necessary
-            while np.linalg.norm(achieved_goal - self.goal) <= 0.45:
+            while np.linalg.norm(achieved_goal - self.goal) <= 0.8:
                 # Generate another goal
                 goal = self.generate_target_goal()
                 # Add noise to goal position
