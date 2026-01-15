@@ -25,11 +25,11 @@ export MUJOCO_GL=osmesa
 echo "Starting SEED 0..."
 
 
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 3 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 3 --num-runs 1 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 1 --num-runs 1 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 2 --num-runs 1 &
 CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 3 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 3 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 2 --num-runs 1 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 4 --num-runs 1 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 5 --num-runs 1 &
 
 # # Wait for all Seed 0 jobs to finish before continuing
 # wait 

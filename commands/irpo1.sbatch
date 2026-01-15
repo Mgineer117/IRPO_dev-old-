@@ -23,11 +23,11 @@ conda activate irpo
 export MUJOCO_GL=osmesa
 
 # # === Run Experiments in Parallel ===
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 0 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 0 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 0 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 0 --num-runs 1 &
-CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 2 --num-runs 1 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 1 --num-runs 1 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v1 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 2 --num-runs 1 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v2 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 3 --num-runs 1 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v3 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 4 --num-runs 1 &
+CUDA_VISIBLE_DEVICES=0 python3 main.py --env-name antmaze-v0 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 5 --num-runs 1 &
 
 CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v0 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 1 --num-runs 1 &
 CUDA_VISIBLE_DEVICES=1 python3 main.py --env-name antmaze-v1 --algo-name irpo --irpo-type irpo --project Ant --num-inner-updates 5 --seed 1 --num-runs 1 &
