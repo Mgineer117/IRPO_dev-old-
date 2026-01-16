@@ -1,53 +1,78 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
+import torch.nn.functional as F
 
-# Hyperparameters
-alpha = 0.05  # pseudo-loss learning rate
-beta = 0.5  # meta learning rate
-num_steps = 5
-meta_steps = 500
-tol = 1e-2
+# --- Hyperparameters ---
+alpha = 0.05  # Inner loop learning rate
+beta = 0.5  # Meta learning rate
+num_steps = 5  # Number of inner steps
+meta_steps = 500  # Number of meta steps
+tol = 1e-3  # Convergence tolerance
 
-pseudo_optima = [
-    (0, -3),
-    (0, 4),
-    (3, 0),
-    (-2, 0),
-]  # pseudo-optima for the inner-level optimization
-COLORS = ["lightcoral", "lightskyblue", "palegreen", "plum"]
+# Multi-objective settings
+tau = 0.0  # Temperature: 0 = hard argmax, >0 = softmax
+num_intrinsic_optima = 1  # How many optima to use from the dictionary
+
+# distinct colors for each intrinsic goal
+COLORS = ["#FF0000", "#0000FF", "#00FF00", "#FF00FF", "#00FFFF", "#FFA500"]
+
+# Dictionary of available intrinsic definitions
+INTRINSIC_DEFINITIONS = {
+    0: (0, -2),
+    1: (-2, 2),
+    2: (2, 2),
+    3: (-2, -2),
+    4: (2, -2),
+}
+
+# Select active optima based on hyperparameter
+active_indices = list(INTRINSIC_DEFINITIONS.keys())[:num_intrinsic_optima]
+active_optima = [
+    torch.tensor(INTRINSIC_DEFINITIONS[i], dtype=torch.float32) for i in active_indices
+]
+
+# --- Loss Functions ---
 
 
-# Loss functions
-def pseudo_loss_fn(x, idx):
-    optima = pseudo_optima[idx]
-    return torch.norm(x[0] - optima[0]) ** 2 + torch.norm(x[1] - optima[1]) ** 2
+def get_pseudo_loss(x, target):
+    """Computes distance to a specific intrinsic target."""
+    return torch.norm(x - target) ** 2
 
 
 def loss_fn(x):
+    """Extrinsic objective (distance to origin)."""
     return torch.norm(x) ** 2
 
 
-# Compute meta gradient and record all pseudo-loss paths
-def compute_meta_gradient(theta_init, idx):
+# --- Meta-Gradient Computation ---
+
+
+def compute_single_path_gradient(theta_init, target_optimum):
+    """
+    Computes the meta-gradient for a single intrinsic objective.
+    Returns: meta_gradient, trajectory_list, final_extrinsic_loss
+    """
     theta_list = []
     grad_list = []
 
     theta = theta_init.clone().detach().requires_grad_(True)
     theta_list.append(theta)
 
+    # 1. Inner Loop Optimization
     for _ in range(num_steps):
-        loss = pseudo_loss_fn(theta, idx)
+        loss = get_pseudo_loss(theta, target_optimum)
         grad = torch.autograd.grad(loss, theta, create_graph=True)[0]
         grad_list.append(grad)
         theta = theta - alpha * grad
         theta_list.append(theta)
 
-    # Final meta loss and gradient
+    # 2. Compute Meta Loss (Extrinsic)
     loss_meta = loss_fn(theta)
+
+    # 3. Compute Gradient wrt Theta_0 (MAML-style differentiation)
     v_final = torch.autograd.grad(loss_meta, theta, retain_graph=True)[0]
 
-    # Backward pass (reverse-mode Hessian-vector product)
     v = v_final
     for i in reversed(range(num_steps)):
         H_v = torch.autograd.grad(
@@ -55,54 +80,80 @@ def compute_meta_gradient(theta_init, idx):
         )[0]
         v = v - alpha * H_v
 
-    return v.detach(), theta_list, v_final.detach()
+    return v.detach(), theta_list, loss_meta.item()
 
 
-# Initialize meta optimization
+def compute_aggregated_gradient(theta_init):
+    """
+    Aggregates gradients from all active intrinsic optima using softmax/argmax.
+    """
+    gradients = []
+    trajectories = []
+    extrinsic_losses = []
+
+    # Run independent inner loops for each intrinsic optimum
+    for target in active_optima:
+        grad, traj, meta_loss = compute_single_path_gradient(theta_init, target)
+        gradients.append(grad)
+        trajectories.append(traj)
+        extrinsic_losses.append(meta_loss)
+
+    gradients = torch.stack(gradients)
+    extrinsic_losses = torch.tensor(extrinsic_losses)
+
+    # Calculate Weights
+    # We want to MAXIMIZE the objective, so we treat negative loss as utility.
+    scores = -extrinsic_losses
+
+    if tau == 0:
+        # Hard Argmax
+        best_idx = torch.argmax(scores)
+        weights = torch.zeros_like(scores)
+        weights[best_idx] = 1.0
+    else:
+        # Softmax
+        # scores_shifted = scores - torch.max(scores)
+        # weights = F.softmax(scores_shifted / tau, dim=0)
+        weights = F.softmax(scores / tau, dim=0)
+
+    # Aggregate Gradients: sum(w_i * grad_i)
+    weighted_grads = gradients * weights.unsqueeze(1)
+    meta_grad = torch.sum(weighted_grads, dim=0)
+
+    return meta_grad, trajectories, weights
+
+
+# --- Main Optimization Loop ---
+
 theta0 = torch.tensor([6.0, -6.0])
 meta_trajectory = [theta0.numpy()]
-meta_grads = []
-local_grads = []
-all_pseudo_trajectories = []
+all_step_trajectories = []  # Stores list of lists of trajectories
 
-# Meta optimization loop
+print(f"Starting Meta-Optimization with {num_intrinsic_optima} optima and tau={tau}...")
+
 for i in range(meta_steps):
-    meta_grad_list = []
-    local_grad_list = []
-    t_list = []
-    for j in range(len(pseudo_optima)):
-        meta_grad, theta_list, grad_theta_n = compute_meta_gradient(theta0, j)
-        meta_grad_list.append(meta_grad)
-        local_grad_list.append(grad_theta_n)
-        t_list.append(theta_list)
+    meta_grad, paths, weights = compute_aggregated_gradient(theta0)
 
-    meta_grads.append([x.numpy for x in meta_grad_list])
-    local_grads.append([x.numpy for x in local_grad_list])
-    all_pseudo_trajectories.append(
-        [torch.stack([x.detach() for x in t]).numpy() for t in t_list]
-    )
+    # Store trajectories for visualization
+    current_step_paths = []
+    for p in paths:
+        current_step_paths.append(torch.stack([t.detach() for t in p]).numpy())
+    all_step_trajectories.append(current_step_paths)
 
-    # calculate the objective function value for each final value of t_list
-    objective_values = [loss_fn(torch.tensor(t[-1])) for t in t_list]
-    # compute its 1 / (v + 1) to make it concave
-    objective_values = [1 / (v + 1) for v in objective_values]
-    # apply the softmax function to the objective values
-    weights = torch.softmax(torch.tensor(objective_values), dim=0)
-    # update the meta gradient as a weighted sum
-    meta_grad = sum(
-        w * g for w, g in zip(weights, meta_grad_list)
-    )  # weighted sum of meta gradients
-
-    theta0 = theta0 - beta * meta_grad
-    meta_trajectory.append(theta0.numpy())
-
+    # Check convergence
     if torch.linalg.norm(meta_grad, 2) < tol:
         meta_steps = i
         break
 
-print(f"Meta steps: {meta_steps}")
+    # Meta Update
+    theta0 = theta0 - beta * meta_grad
+    meta_trajectory.append(theta0.numpy())
+
+print(f"Converged in {meta_steps} steps.")
 meta_trajectory = np.stack(meta_trajectory)
-meta_grads = np.stack(meta_grads)
+
+
+# --- Plotting ---
 
 # Prepare background contour
 x = np.linspace(-8, 8, 100)
@@ -110,19 +161,120 @@ y = np.linspace(-8, 8, 100)
 X, Y = np.meshgrid(x, y)
 Z = X**2 + Y**2
 
-# Plotting
 plt.figure(figsize=(12, 12))
-plt.contour(X, Y, -Z, levels=25, cmap="viridis")
 
-# Plot all pseudo-loss trajectories
+# 1. Background Contours
+plt.contourf(
+    X, Y, -Z, levels=25, cmap="gray", alpha=0.5
+)  # Changed to gray to make colors pop
+# plt.contour(X, Y, -Z, levels=10, colors="white", alpha=0.3, linewidths=0.5)
 
-for trajs in all_pseudo_trajectories:
-    for i, traj in enumerate(trajs):
+# Start Point
+plt.scatter(
+    meta_trajectory[0, 0],
+    meta_trajectory[0, 1],
+    s=500,
+    color="white",
+    edgecolors="black",
+    linewidths=2,
+    label=r"Initial base policy $\theta$",
+    zorder=7,
+)
+
+# End Point
+plt.scatter(
+    meta_trajectory[-1, 0],
+    meta_trajectory[-1, 1],
+    s=500,
+    color="black",
+    edgecolors="white",
+    linewidths=2,
+    label=r"Resulting base policy $\theta^\dagger$",
+    zorder=7,
+)
+
+
+# Intrinsic Optima (Multiple with distinct colors)
+for idx, opt in enumerate(active_optima):
+    opt_np = opt.numpy()
+    c = COLORS[idx % len(COLORS)]
+    plt.scatter(
+        opt_np[0],
+        opt_np[1],
+        s=1500,
+        color=c,
+        edgecolors="black",
+        linewidths=2,
+        marker="*",
+        label=f"Intrinsic optimum ({idx + 1})",
+        zorder=5,
+    )
+    # # Label the stars
+    # plt.text(
+    #     opt_np[0] - 1.7,
+    #     opt_np[1] + 0.5,
+    #     f"Opt ({idx + 1})",
+    #     color=c,
+    #     fontsize=14,
+    #     fontweight="bold",
+    #     bbox=dict(facecolor="white", alpha=0.5, edgecolor="none", pad=1),
+    # )
+
+# Extrinsic Optimum (Target)
+plt.scatter(
+    0,
+    0,
+    s=1500,
+    color="yellow",
+    edgecolors="black",
+    linewidths=2,
+    marker="*",
+    label="Extrinsic optimum",
+    zorder=6,
+)
+
+
+# 3. Plot Meta-Gradient Path (Outer Loop)
+X_meta = meta_trajectory[:-1, 0]
+Y_meta = meta_trajectory[:-1, 1]
+U_meta = meta_trajectory[1:, 0] - meta_trajectory[:-1, 0]
+V_meta = meta_trajectory[1:, 1] - meta_trajectory[:-1, 1]
+
+plt.quiver(
+    X_meta,
+    Y_meta,
+    U_meta,
+    V_meta,
+    angles="xy",
+    scale_units="xy",
+    scale=1,
+    color="white",  # Changed to white/black for visibility
+    edgecolor="black",
+    alpha=1.0,
+    linewidth=1.0,
+    label="Base policy updates",
+    zorder=10,
+)
+
+
+# 2. Plot Inner Loop Trajectories
+for i, step_paths in enumerate(all_step_trajectories):
+    # Calculate transparency based on time (newer = more opaque)
+    alpha_val = 0.9 - 0.6 * (i / meta_steps)
+    if alpha_val < 0.1:
+        alpha_val = 0.1
+
+    for path_idx, traj in enumerate(step_paths):
+        # Pick color corresponding to the intrinsic optimum
+        c = COLORS[path_idx % len(COLORS)]
+
         start = traj[0]
         end = traj[-1]
         dx = end[0] - start[0]
         dy = end[1] - start[1]
 
+        if i % 2 != 0:
+            continue  # Plot every 10th for clarity
         plt.quiver(
             start[0],
             start[1],
@@ -130,144 +282,30 @@ for trajs in all_pseudo_trajectories:
             dy,
             angles="xy",
             scale_units="xy",
-            scale=0.5,
-            color=COLORS[i],
-            alpha=0.8 - 0.4 * (i / meta_steps),
-            linewidth=2,
-            label="Inner-level progression" if i == 0 else None,
+            scale=1,
+            color=c,
+            alpha=alpha_val,
+            linewidth=1.5,
+            headwidth=3,
+            label=f"Exploratory policy updates ({path_idx + 1})" if i == 0 else None,
         )
 
 
-# Plot meta-gradient descent path
-X = meta_trajectory[:-1, 0]  # starting x-coordinates
-Y = meta_trajectory[:-1, 1]  # starting y-coordinates
-U = meta_trajectory[1:, 0] - meta_trajectory[:-1, 0]  # dx
-V = meta_trajectory[1:, 1] - meta_trajectory[:-1, 1]  # dy
+# 4. Plot Points
 
-plt.quiver(
-    X,
-    Y,
-    U,
-    V,
-    angles="xy",
-    scale_units="xy",
-    scale=1,
-    color="black",
-    # alpha=0.8,
-    linewidth=2,
-    label="Outer-level progression",
+
+# Labels and Styling
+plt.title(
+    rf"IRPO ($\tau$={tau}, $N$={num_steps}, $K$={num_intrinsic_optima})", fontsize=42
 )
+plt.xlabel(r"$\theta_1$", fontsize=32)
+plt.ylabel(r"$\theta_2$", fontsize=32)
+plt.tick_params(axis="both", which="major", labelsize=24)
+# plt.axis("equal")
+plt.grid(True, linestyle="--", alpha=0.3, color="white")
 
+# Adjust legend to show distinct colors
+# plt.legend(loc="upper center", bbox_to_anchor=(0.5, -0.05), ncol=4, fontsize=14)
 
-# Points
-# Optimal pseudo-loss point (distinct yellow with black border)
-for i, opt in enumerate(pseudo_optima):
-    plt.scatter(
-        opt[0],
-        opt[1],
-        s=850,
-        color=COLORS[i],
-        edgecolors="black",
-        linewidths=1.5,
-        marker="*",
-        label="Intrinsic optimum",
-        zorder=5,
-    )
-
-# Optimal final loss (green star with black edge)
-plt.scatter(
-    0,
-    0,
-    s=850,
-    color="yellow",
-    edgecolors="black",
-    linewidths=1.5,
-    marker="*",
-    label="Extrinsic optimum",
-    zorder=5,
-)
-
-# # Quiver: meta-gradient direction
-# for i in range(meta_steps):
-#     grad = -meta_grads[i]
-#     norm = 1e-2 * np.linalg.norm(grad)
-#     plt.quiver(
-#         meta_trajectory[i, 0],
-#         meta_trajectory[i, 1],
-#         grad[0],
-#         grad[1],
-#         angles="xy",
-#         scale_units="xy",
-#         # scale=1.0 / (norm + 1e-6),  # prevent divide-by-zero
-#         color="purple",
-#         # width=0.25 * norm,
-#         label=(
-#             r"$\nabla_{\tilde{\theta}^{(0)}} \mathcal{J}(\tilde{\theta}^{(N)})$"
-#             if i == 0
-#             else None
-#         ),
-#     )
-
-
-# # Final ∇θₙ L_meta
-# for i in range(meta_steps):
-#     grad_local = -local_grads[i]
-#     norm_local = 1e-2 * np.linalg.norm(grad_local)
-#     plt.quiver(
-#         all_pseudo_trajectories[i][-1, 0],
-#         all_pseudo_trajectories[i][-1, 1],
-#         grad_local[0],
-#         grad_local[1],
-#         angles="xy",
-#         scale_units="xy",
-#         color="green",
-#         # width=0.08 * norm_local,
-#         label=(
-#             r"$\nabla_{\tilde{\theta}^{(N)}} \mathcal{J}(\tilde{\theta}^{(N)})$"
-#             if i == 0
-#             else None
-#         ),
-#     )
-
-
-# Starting θ₀ (large blue star with white border)
-plt.scatter(
-    meta_trajectory[0, 0],
-    meta_trajectory[0, 1],
-    s=500,
-    color="red",
-    edgecolors="grey",
-    linewidths=3,
-    label=r"Start $\theta$",
-    zorder=6,
-)
-
-# Final θ₀ after meta-updates (blue square with black edge)
-plt.scatter(
-    meta_trajectory[-1, 0],
-    meta_trajectory[-1, 1],
-    s=500,
-    color="blue",
-    edgecolors="grey",
-    linewidths=3,
-    label=r"Final $\theta$",
-    zorder=5,
-)
-
-# Labels and legends
-plt.title(f"IRPO with {num_steps} inner-level updates", fontsize=42)
-plt.xlabel(r"$\theta[0]$", fontsize=28)
-plt.ylabel(r"$\theta[1]$", fontsize=28)
-# Tick label sizes
-plt.tick_params(axis="x", labelsize=26)
-plt.tick_params(axis="y", labelsize=26)
-plt.axis("equal")
-plt.grid(True, linestyle="--", alpha=0.6)
-
-# Place legend above the figure
-# plt.legend(loc="upper center", bbox_to_anchor=(0.5, 1.35), ncol=3, fontsize=24)
-
-# Show the figure
-# plt.tight_layout()
-# plt.show()
-plt.savefig("meta_gradient_descent.png", bbox_inches="tight", dpi=300)
+plt.tight_layout()
+plt.savefig("multi_objective.svg", bbox_inches="tight", dpi=300)
