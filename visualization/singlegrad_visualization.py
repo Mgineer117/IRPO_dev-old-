@@ -290,7 +290,7 @@ cbar.set_ticks([contour_fill.levels.min(), contour_fill.levels.max()])
 cbar.set_ticklabels(["Low", "High"])
 # Adjust label size
 cbar.ax.tick_params(labelsize=24)
-cbar.set_label("Extrinsic Return", size=24, labelpad=10)
+cbar.set_label(r"Performance: $J(\theta)$", size=24, labelpad=10)
 # ------------------------------------
 
 # Labels and Styling
