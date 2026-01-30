@@ -1,6 +1,0 @@
-nohup python3 main.py --env-name fetchpush-v0 --algo-name irpo --entropy-scaler 0.01 --rendering &
-nohup python3 main.py --env-name fetchpush-v0 --algo-name irpo --entropy-scaler 0.001 &
-
-nohup python3 main.py --env-name fetchpush-v0 --algo-name hrl --rendering &
-
-nohup python3 main.py --env-name fetchpush-v0 --algo-name ppo --rendering &

@@ -1,3 +1,0 @@
-nohup python3 main.py --algo-name irpo --irpo-type irpo --env-name pointmaze-v0 --project IRPO_softarg --rendering &
-nohup python3 main.py --algo-name irpo --irpo-type irpo --env-name pointmaze-v1 --project IRPO_softarg --rendering &
-nohup python3 main.py --algo-name irpo --irpo-type irpo --env-name fetchreach-v0 --project IRPO_softarg --rendering &
